@@ -1,0 +1,14 @@
+# Local PostgreSQL for development: `docker compose up -d db`
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: esims
+      POSTGRES_USER: esims
+      POSTGRES_PASSWORD: esims
+    ports:
+      - "5432:5432"
+    volumes:
+      - esims_pgdata:/var/lib/postgresql/data
+volumes:
+  esims_pgdata:
