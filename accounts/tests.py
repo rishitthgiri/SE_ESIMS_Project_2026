@@ -23,3 +23,60 @@ class UserModelTests(TestCase):
         make_user('a', email='same@esims.local')
         with self.assertRaises(Exception):
             make_user('b', email='same@esims.local')
+
+
+class LoginTests(TestCase):
+    """ESIMS-02 / FR-001 / UC-01"""
+
+    def setUp(self):
+        self.user = make_user()
+        self.url = reverse('accounts:login')
+
+    def test_login_page_loads(self):
+        self.assertEqual(self.client.get(self.url).status_code, 200)
+
+    def test_login_with_username(self):
+        r = self.client.post(self.url, {'username': 'staff1', 'password': 'Pass@12345'})
+        self.assertRedirects(r, reverse('accounts:dashboard'))
+        self.assertIn('_auth_user_id', self.client.session)
+
+    def test_login_with_email(self):
+        r = self.client.post(self.url, {'username': 'staff1@esims.local', 'password': 'Pass@12345'})
+        self.assertRedirects(r, reverse('accounts:dashboard'))
+
+    def test_login_wrong_password_shows_error(self):
+        r = self.client.post(self.url, {'username': 'staff1', 'password': 'wrong'})
+        self.assertEqual(r.status_code, 200)
+        self.assertContains(r, 'Invalid username/email or password.')
+        self.assertNotIn('_auth_user_id', self.client.session)
+
+    def test_login_unknown_user(self):
+        r = self.client.post(self.url, {'username': 'nobody', 'password': 'x'})
+        self.assertContains(r, 'Invalid username/email or password.')
+
+    def test_dashboard_requires_login(self):
+        r = self.client.get(reverse('accounts:dashboard'))
+        self.assertRedirects(r, f"{reverse('accounts:login')}?next=/")
+
+    def test_logout(self):
+        self.client.login(username='staff1', password='Pass@12345')
+        self.client.post(reverse('accounts:logout'))
+        self.assertNotIn('_auth_user_id', self.client.session)
+
+
+class PasswordHashingTests(TestCase):
+    """ESIMS-03 / SEC-001"""
+
+    def test_password_is_hashed(self):
+        user = make_user(password='Plain@Text1')
+        self.assertNotEqual(user.password, 'Plain@Text1')
+        self.assertTrue(user.password.startswith('pbkdf2_sha256$'))
+
+    def test_plaintext_not_in_password_field(self):
+        user = make_user(password='Secret@123')
+        self.assertNotIn('Secret@123', user.password)
+
+    def test_check_password_works(self):
+        user = make_user(password='Secret@123')
+        self.assertTrue(user.check_password('Secret@123'))
+        self.assertFalse(user.check_password('other'))

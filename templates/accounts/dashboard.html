@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h3>Welcome, {{ user.first_name|default:user.username }}</h3>
+<p class="text-muted">Role: {{ user.get_role_display }}</p>
+<div class="row g-3">
+  <div class="col-md-4">
+    <div class="card"><div class="card-body">
+      <h5 class="card-title">Inventory</h5>
+      <p class="card-text text-muted">Coming in later sprints.</p>
+    </div></div>
+  </div>
+</div>
+{% endblock %}
