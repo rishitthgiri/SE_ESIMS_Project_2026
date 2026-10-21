@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Stock-out{% endblock %}
+{% block content %}
+{% include "transactions/_nav.html" with active="out" %}
+<h1 class="h3 mb-3">Record stock-out (sale)</h1>
+<div class="card shadow-sm"><div class="card-body" style="max-width: 560px;">
+  {% include "transactions/_form.html" with button="Save stock-out" %}
+</div></div>
+{% endblock %}

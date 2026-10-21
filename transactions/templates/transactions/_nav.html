@@ -1,0 +1,5 @@
+<ul class="nav nav-pills mb-3">
+  <li class="nav-item"><a class="nav-link {% if active == 'in' %}active{% endif %}" href="{% url 'transactions:stock_in' %}">Stock-in (purchase)</a></li>
+  <li class="nav-item"><a class="nav-link {% if active == 'out' %}active{% endif %}" href="{% url 'transactions:stock_out' %}">Stock-out (sale)</a></li>
+  <li class="nav-item"><a class="nav-link {% if active == 'list' %}active{% endif %}" href="{% url 'transactions:list' %}">Transactions</a></li>
+</ul>
