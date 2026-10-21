@@ -152,3 +152,9 @@ AUTHENTICATION_BACKENDS = ['accounts.backends.UsernameOrEmailBackend']
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'accounts:dashboard'
 LOGOUT_REDIRECT_URL = 'accounts:login'
+
+# ESIMS-03 / SEC-001: passwords are hashed with Django's default hasher (PBKDF2-SHA256).
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+]

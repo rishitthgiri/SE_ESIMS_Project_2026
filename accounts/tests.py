@@ -62,3 +62,21 @@ class LoginTests(TestCase):
         self.client.login(username='staff1', password='Pass@12345')
         self.client.post(reverse('accounts:logout'))
         self.assertNotIn('_auth_user_id', self.client.session)
+
+
+class PasswordHashingTests(TestCase):
+    """ESIMS-03 / SEC-001"""
+
+    def test_password_is_hashed(self):
+        user = make_user(password='Plain@Text1')
+        self.assertNotEqual(user.password, 'Plain@Text1')
+        self.assertTrue(user.password.startswith('pbkdf2_sha256$'))
+
+    def test_plaintext_not_in_password_field(self):
+        user = make_user(password='Secret@123')
+        self.assertNotIn('Secret@123', user.password)
+
+    def test_check_password_works(self):
+        user = make_user(password='Secret@123')
+        self.assertTrue(user.check_password('Secret@123'))
+        self.assertFalse(user.check_password('other'))
