@@ -1,0 +1,17 @@
+<table class="table table-sm table-striped bg-white align-middle">
+  <thead class="table-dark"><tr><th>SKU</th><th>Product</th><th>Category</th><th class="text-end">In stock</th><th class="text-end">Reorder at</th><th>Supplier</th></tr></thead>
+  <tbody>
+  {% for p in products %}
+    <tr>
+      <td>{{ p.sku }}</td>
+      <td>{{ p.name }}</td>
+      <td>{{ p.category.name }}</td>
+      <td class="text-end"><span class="badge bg-danger">{{ p.quantity_in_stock }}</span></td>
+      <td class="text-end">{{ p.reorder_threshold }}</td>
+      <td>{{ p.supplier.name|default:"-" }}</td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="6" class="text-center text-muted py-3">All products are above their reorder level.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
