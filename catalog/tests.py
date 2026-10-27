@@ -518,3 +518,134 @@ class ProductEditTests(TestCase):
         r = self.client.get(edit_url)
         self.assertEqual(r.status_code, 302)
 
+
+class ProductSearchFilterTests(TestCase):
+    def setUp(self):
+        self.admin = User.objects.create_user(
+            'admin1', 'admin1@esims.local', PASSWORD, role='ADMIN'
+        )
+        self.staff = User.objects.create_user(
+            'staff1', 'staff1@esims.local', PASSWORD, role='STAFF'
+        )
+        self.cat_laptops = Category.objects.create(name='Laptops', status=Category.Status.ACTIVE)
+        self.cat_phones = Category.objects.create(name='Phones', status=Category.Status.ACTIVE)
+        self.cat_audio = Category.objects.create(name='Audio', status=Category.Status.DISABLED)
+
+        self.p1 = Product.objects.create(
+            sku='LAP-X1',
+            name='ThinkPad X1',
+            category=self.cat_laptops,
+            price=Decimal('1200.00'),
+            quantity_in_stock=10,
+            status=Product.Status.ACTIVE,
+        )
+        self.p2 = Product.objects.create(
+            sku='LAP-XPS',
+            name='Dell XPS 15',
+            category=self.cat_laptops,
+            price=Decimal('1500.00'),
+            quantity_in_stock=5,
+            status=Product.Status.DISABLED,
+        )
+        self.p3 = Product.objects.create(
+            sku='PHN-IP14',
+            name='iPhone 14 Pro',
+            category=self.cat_phones,
+            price=Decimal('999.00'),
+            quantity_in_stock=20,
+            status=Product.Status.ACTIVE,
+        )
+
+    def test_search_by_name_partial_case_insensitive(self):
+        self.client.login(username='staff1', password=PASSWORD)
+        response = self.client.get(reverse('catalog:product_list'), {'q': 'thinkpad'})
+        self.assertEqual(response.status_code, 200)
+        products = list(response.context['products'])
+        self.assertIn(self.p1, products)
+        self.assertNotIn(self.p2, products)
+        self.assertNotIn(self.p3, products)
+
+    def test_search_by_sku_partial_case_insensitive(self):
+        self.client.login(username='admin1', password=PASSWORD)
+        response = self.client.get(reverse('catalog:product_list'), {'q': 'lap'})
+        self.assertEqual(response.status_code, 200)
+        products = list(response.context['products'])
+        self.assertEqual(len(products), 2)
+        self.assertIn(self.p1, products)
+        self.assertIn(self.p2, products)
+        self.assertNotIn(self.p3, products)
+
+    def test_filter_by_category(self):
+        self.client.login(username='staff1', password=PASSWORD)
+        response = self.client.get(
+            reverse('catalog:product_list'), {'category': str(self.cat_phones.pk)}
+        )
+        self.assertEqual(response.status_code, 200)
+        products = list(response.context['products'])
+        self.assertEqual(products, [self.p3])
+
+    def test_filter_by_status(self):
+        self.client.login(username='admin1', password=PASSWORD)
+        response = self.client.get(reverse('catalog:product_list'), {'status': 'disabled'})
+        self.assertEqual(response.status_code, 200)
+        products = list(response.context['products'])
+        self.assertEqual(products, [self.p2])
+
+    def test_combined_filters(self):
+        self.client.login(username='admin1', password=PASSWORD)
+        response = self.client.get(
+            reverse('catalog:product_list'),
+            {
+                'q': 'X1',
+                'category': str(self.cat_laptops.pk),
+                'status': 'active',
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        products = list(response.context['products'])
+        self.assertEqual(products, [self.p1])
+
+    def test_combined_filters_no_match(self):
+        self.client.login(username='staff1', password=PASSWORD)
+        response = self.client.get(
+            reverse('catalog:product_list'),
+            {
+                'q': 'iPhone',
+                'category': str(self.cat_laptops.pk),
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['products']), 0)
+        self.assertContains(response, 'No products match your search.')
+
+    def test_invalid_category_uuid_does_not_crash(self):
+        self.client.login(username='staff1', password=PASSWORD)
+        response = self.client.get(reverse('catalog:product_list'), {'category': 'not-a-valid-uuid'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['products']), 3)
+
+    def test_blank_filter_parameters_ignored(self):
+        self.client.login(username='staff1', password=PASSWORD)
+        response = self.client.get(
+            reverse('catalog:product_list'),
+            {'q': '   ', 'category': '', 'status': ''},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['products']), 3)
+
+    def test_form_preserves_chosen_values(self):
+        self.client.login(username='admin1', password=PASSWORD)
+        response = self.client.get(
+            reverse('catalog:product_list'),
+            {
+                'q': 'ThinkPad',
+                'category': str(self.cat_laptops.pk),
+                'status': 'active',
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'value="ThinkPad"')
+        self.assertContains(response, f'value="{self.cat_laptops.pk}" selected')
+        self.assertContains(response, 'value="active" selected')
+
+
