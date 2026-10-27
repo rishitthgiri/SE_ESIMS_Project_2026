@@ -16,6 +16,31 @@
   {% endfor %}
 {% endif %}
 
+<form method="get" class="row g-2 align-items-center mb-4">
+  <div class="col-md-4">
+    <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="Search name or SKU...">
+  </div>
+  <div class="col-md-3">
+    <select name="category" class="form-select">
+      <option value="">All Categories</option>
+      {% for cat in categories %}
+      <option value="{{ cat.pk }}" {% if selected_category == cat.pk|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2">
+    <select name="status" class="form-select">
+      <option value="">All Statuses</option>
+      <option value="active" {% if selected_status == 'active' %}selected{% endif %}>Active</option>
+      <option value="disabled" {% if selected_status == 'disabled' %}selected{% endif %}>Disabled</option>
+    </select>
+  </div>
+  <div class="col-md-3 d-flex gap-2">
+    <button type="submit" class="btn btn-outline-primary">Filter</button>
+    <a href="{% url 'catalog:product_list' %}" class="btn btn-outline-secondary">Reset</a>
+  </div>
+</form>
+
 <div class="table-responsive">
   <table class="table table-striped align-middle">
     <thead>
@@ -46,7 +71,13 @@
       </tr>
       {% empty %}
       <tr>
-        <td colspan="{% if user.is_admin_role %}7{% else %}6{% endif %}" class="text-center text-muted py-4">No products yet.</td>
+        <td colspan="{% if user.is_admin_role %}7{% else %}6{% endif %}" class="text-center text-muted py-4">
+          {% if is_filtered %}
+          No products match your search.
+          {% else %}
+          No products yet.
+          {% endif %}
+        </td>
       </tr>
       {% endfor %}
     </tbody>
