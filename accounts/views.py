@@ -5,6 +5,8 @@ from django.shortcuts import render
 from django.views.generic import ListView
 
 from .forms import EmailOrUsernameAuthenticationForm
+from reports.alerts import low_stock_products
+
 from .mixins import AdminRequiredMixin
 
 User = get_user_model()
@@ -20,7 +22,7 @@ class ESIMSLoginView(LoginView):
 
 @login_required
 def dashboard(request):
-    return render(request, 'accounts/dashboard.html')
+    return render(request, 'accounts/dashboard.html', {'low_stock': low_stock_products()})
 
 
 class StaffListView(AdminRequiredMixin, ListView):

@@ -21,7 +21,7 @@
       <td>{% if t.transaction_type == 'IN' %}<span class="badge bg-success">IN</span>{% else %}<span class="badge bg-danger">OUT</span>{% endif %}</td>
       <td>{{ t.product.sku }} - {{ t.product.name }}</td>
       <td class="text-end">{{ t.quantity }}</td>
-      <td>{{ t.supplier.name|default:"-" }}</td>
+      <td>{% if t.supplier %}{% if user.is_admin_role %}<a href="{% url 'suppliers:detail' t.supplier.pk %}">{{ t.supplier.name }}</a>{% else %}{{ t.supplier.name }}{% endif %}{% else %}-{% endif %}</td>
       <td>{{ t.user.username }}</td>
     </tr>
   {% empty %}

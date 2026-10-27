@@ -13,7 +13,13 @@
     {% if user.is_authenticated %}
     <ul class="navbar-nav me-auto">
       <li class="nav-item"><a class="nav-link" href="{% url 'accounts:dashboard' %}">Dashboard</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'catalog:product_list' %}">Products</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'transactions:stock_in' %}">Stock-in</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'transactions:stock_out' %}">Stock-out</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'transactions:list' %}">Transactions</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'reports:low_stock' %}">Low stock</a></li>
       {% if user.is_admin_role %}
+      <li class="nav-item"><a class="nav-link" href="{% url 'suppliers:list' %}">Suppliers</a></li>
       <li class="nav-item"><a class="nav-link" href="{% url 'accounts:staff_list' %}">Manage Staff</a></li>
       {% endif %}
     </ul>
