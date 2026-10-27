@@ -649,3 +649,77 @@ class ProductSearchFilterTests(TestCase):
         self.assertContains(response, 'value="active" selected')
 
 
+class ProductStockDisplayTests(TestCase):
+    def setUp(self):
+        self.admin = User.objects.create_user(
+            'admin1', 'admin1@esims.local', PASSWORD, role='ADMIN'
+        )
+        self.staff = User.objects.create_user(
+            'staff1', 'staff1@esims.local', PASSWORD, role='STAFF'
+        )
+        self.cat1 = Category.objects.create(name='Monitors', status=Category.Status.ACTIVE)
+        self.cat2 = Category.objects.create(name='Keyboards', status=Category.Status.ACTIVE)
+
+        self.p1 = Product.objects.create(
+            sku='MON-001',
+            name='Dell 27 Inch 4K',
+            category=self.cat1,
+            price=Decimal('399.99'),
+            quantity_in_stock=123,
+            status=Product.Status.ACTIVE,
+        )
+        self.p2 = Product.objects.create(
+            sku='MON-002',
+            name='LG UltraWide 34',
+            category=self.cat1,
+            price=Decimal('699.99'),
+            quantity_in_stock=0,
+            status=Product.Status.ACTIVE,
+        )
+        self.p3 = Product.objects.create(
+            sku='KB-001',
+            name='Keychron K2',
+            category=self.cat2,
+            price=Decimal('79.99'),
+            quantity_in_stock=55,
+            status=Product.Status.ACTIVE,
+        )
+
+    def test_stock_quantity_clearly_labelled_and_visible_to_staff(self):
+        self.client.login(username='staff1', password=PASSWORD)
+        response = self.client.get(reverse('catalog:product_list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'In stock')
+        self.assertContains(response, '123')
+        self.assertContains(response, '0')
+        self.assertContains(response, '55')
+
+    def test_stock_quantity_visible_to_admin(self):
+        self.client.login(username='admin1', password=PASSWORD)
+        response = self.client.get(reverse('catalog:product_list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'In stock')
+        self.assertContains(response, '123')
+        self.assertContains(response, '0')
+        self.assertContains(response, '55')
+
+    def test_stock_quantity_correct_when_filtered(self):
+        self.client.login(username='staff1', password=PASSWORD)
+        response = self.client.get(
+            reverse('catalog:product_list'), {'category': str(self.cat1.pk)}
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '123')
+        self.assertContains(response, '0')
+        self.assertNotContains(response, 'Keychron K2')
+
+        response_kb = self.client.get(
+            reverse('catalog:product_list'), {'q': 'Keychron'}
+        )
+        self.assertEqual(response_kb.status_code, 200)
+        self.assertContains(response_kb, '55')
+        self.assertNotContains(response_kb, 'Dell 27 Inch 4K')
+        self.assertNotContains(response_kb, 'LG UltraWide 34')
+
+
+
