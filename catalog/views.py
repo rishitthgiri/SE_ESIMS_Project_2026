@@ -33,6 +33,21 @@ def product_add(request):
 
 @login_required
 @admin_required
+def product_edit(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    if request.method == 'POST':
+        form = ProductForm(request.POST, instance=product)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Product updated.')
+            return redirect('catalog:product_list')
+    else:
+        form = ProductForm(instance=product)
+    return render(request, 'catalog/product_form.html', {'form': form, 'title': 'Edit product'})
+
+
+@login_required
+@admin_required
 def category_list(request):
     categories = Category.objects.all()
     return render(request, 'catalog/category_list.html', {'categories': categories})
