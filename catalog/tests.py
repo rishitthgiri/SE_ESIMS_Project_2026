@@ -1,4 +1,5 @@
 from decimal import Decimal
+import uuid
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
@@ -307,3 +308,213 @@ class ProductAddTests(TestCase):
         self.client.login(username='staff1', password=PASSWORD)
         r_staff = self.client.get(reverse('catalog:product_list'))
         self.assertNotContains(r_staff, reverse('catalog:product_add'))
+
+
+class ProductEditTests(TestCase):
+    def setUp(self):
+        self.admin = User.objects.create_user(
+            'admin1', 'admin1@esims.local', PASSWORD, role='ADMIN'
+        )
+        self.staff = User.objects.create_user(
+            'staff1', 'staff1@esims.local', PASSWORD, role='STAFF'
+        )
+        self.category = Category.objects.create(name='Laptops', status=Category.Status.ACTIVE)
+        self.supplier = Supplier.objects.create(name='TechCorp', status=Supplier.Status.ACTIVE)
+        self.product = Product.objects.create(
+            sku='LAP-001',
+            name='ThinkPad X1',
+            category=self.category,
+            price=Decimal('1200.00'),
+            reorder_threshold=5,
+            quantity_in_stock=10,
+            supplier=self.supplier,
+            status=Product.Status.ACTIVE,
+        )
+
+    def test_admin_can_edit_name_and_price(self):
+        self.client.login(username='admin1', password=PASSWORD)
+        data = {
+            'sku': 'LAP-001',
+            'name': 'ThinkPad X1 Carbon Gen 10',
+            'category': self.category.pk,
+            'price': '1399.50',
+            'reorder_threshold': 5,
+            'supplier': self.supplier.pk,
+            'status': 'active',
+        }
+        response = self.client.post(
+            reverse('catalog:product_edit', args=[self.product.pk]), data
+        )
+        self.assertRedirects(response, reverse('catalog:product_list'))
+        self.product.refresh_from_db()
+        self.assertEqual(self.product.name, 'ThinkPad X1 Carbon Gen 10')
+        self.assertEqual(self.product.price, Decimal('1399.50'))
+
+    def test_sku_clash_with_another_product_rejected(self):
+        Product.objects.create(
+            sku='LAP-002',
+            name='Dell XPS 13',
+            category=self.category,
+            price=Decimal('1100.00'),
+            reorder_threshold=3,
+        )
+        self.client.login(username='admin1', password=PASSWORD)
+        data = {
+            'sku': 'lap-002',
+            'name': 'ThinkPad X1',
+            'category': self.category.pk,
+            'price': '1200.00',
+            'reorder_threshold': 5,
+            'status': 'active',
+        }
+        response = self.client.post(
+            reverse('catalog:product_edit', args=[self.product.pk]), data
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertFormError(
+            response.context['form'], 'sku', 'A product with this SKU already exists.'
+        )
+        self.product.refresh_from_db()
+        self.assertEqual(self.product.sku, 'LAP-001')
+
+    def test_keeping_its_own_sku_allowed(self):
+        self.client.login(username='admin1', password=PASSWORD)
+        data = {
+            'sku': 'lap-001',
+            'name': 'ThinkPad Updated',
+            'category': self.category.pk,
+            'price': '1200.00',
+            'reorder_threshold': 5,
+            'status': 'active',
+        }
+        response = self.client.post(
+            reverse('catalog:product_edit', args=[self.product.pk]), data
+        )
+        self.assertRedirects(response, reverse('catalog:product_list'))
+        self.product.refresh_from_db()
+        self.assertEqual(self.product.name, 'ThinkPad Updated')
+        self.assertEqual(self.product.sku, 'lap-001')
+
+    def test_stock_unchanged_even_if_posted(self):
+        self.client.login(username='admin1', password=PASSWORD)
+        data = {
+            'sku': 'LAP-001',
+            'name': 'ThinkPad X1',
+            'category': self.category.pk,
+            'price': '1200.00',
+            'reorder_threshold': 5,
+            'status': 'active',
+            'quantity_in_stock': 999,
+        }
+        response = self.client.post(
+            reverse('catalog:product_edit', args=[self.product.pk]), data
+        )
+        self.assertRedirects(response, reverse('catalog:product_list'))
+        self.product.refresh_from_db()
+        self.assertEqual(self.product.quantity_in_stock, 10)
+
+    def test_edit_can_disable_product(self):
+        self.client.login(username='admin1', password=PASSWORD)
+        data = {
+            'sku': 'LAP-001',
+            'name': 'ThinkPad X1',
+            'category': self.category.pk,
+            'price': '1200.00',
+            'reorder_threshold': 5,
+            'status': 'disabled',
+        }
+        response = self.client.post(
+            reverse('catalog:product_edit', args=[self.product.pk]), data
+        )
+        self.assertRedirects(response, reverse('catalog:product_list'))
+        self.product.refresh_from_db()
+        self.assertEqual(self.product.status, 'disabled')
+        self.assertEqual(self.product.quantity_in_stock, 10)
+
+    def test_editing_works_when_current_category_is_disabled(self):
+        self.category.status = Category.Status.DISABLED
+        self.category.save()
+
+        self.client.login(username='admin1', password=PASSWORD)
+        r_get = self.client.get(reverse('catalog:product_edit', args=[self.product.pk]))
+        self.assertEqual(r_get.status_code, 200)
+
+        data = {
+            'sku': 'LAP-001',
+            'name': 'ThinkPad Renamed',
+            'category': self.category.pk,
+            'price': '1200.00',
+            'reorder_threshold': 5,
+            'status': 'active',
+        }
+        response = self.client.post(
+            reverse('catalog:product_edit', args=[self.product.pk]), data
+        )
+        self.assertRedirects(response, reverse('catalog:product_list'))
+        self.product.refresh_from_db()
+        self.assertEqual(self.product.name, 'ThinkPad Renamed')
+        self.assertEqual(self.product.category, self.category)
+
+    def test_editing_works_when_current_supplier_is_disabled(self):
+        self.supplier.status = Supplier.Status.DISABLED
+        self.supplier.save()
+
+        self.client.login(username='admin1', password=PASSWORD)
+        r_get = self.client.get(reverse('catalog:product_edit', args=[self.product.pk]))
+        self.assertEqual(r_get.status_code, 200)
+
+        data = {
+            'sku': 'LAP-001',
+            'name': 'ThinkPad Supplier Test',
+            'category': self.category.pk,
+            'price': '1200.00',
+            'reorder_threshold': 5,
+            'supplier': self.supplier.pk,
+            'status': 'active',
+        }
+        response = self.client.post(
+            reverse('catalog:product_edit', args=[self.product.pk]), data
+        )
+        self.assertRedirects(response, reverse('catalog:product_list'))
+        self.product.refresh_from_db()
+        self.assertEqual(self.product.supplier, self.supplier)
+
+    def test_unknown_pk_returns_404(self):
+        self.client.login(username='admin1', password=PASSWORD)
+        unknown_pk = uuid.uuid4()
+        response = self.client.get(reverse('catalog:product_edit', args=[unknown_pk]))
+        self.assertEqual(response.status_code, 404)
+
+    def test_staff_cannot_edit_product(self):
+        self.client.login(username='staff1', password=PASSWORD)
+        response = self.client.post(
+            reverse('catalog:product_edit', args=[self.product.pk]),
+            {
+                'sku': 'LAP-001',
+                'name': 'Hacked by staff',
+                'category': self.category.pk,
+                'price': '1.00',
+                'reorder_threshold': 0,
+                'status': 'active',
+            },
+        )
+        self.assertIn(response.status_code, (302, 403))
+        self.product.refresh_from_db()
+        self.assertEqual(self.product.name, 'ThinkPad X1')
+
+    def test_admin_sees_edit_link_staff_does_not(self):
+        edit_url = reverse('catalog:product_edit', args=[self.product.pk])
+
+        self.client.login(username='admin1', password=PASSWORD)
+        r_admin = self.client.get(reverse('catalog:product_list'))
+        self.assertContains(r_admin, edit_url)
+
+        self.client.login(username='staff1', password=PASSWORD)
+        r_staff = self.client.get(reverse('catalog:product_list'))
+        self.assertNotContains(r_staff, edit_url)
+
+    def test_anonymous_redirected_to_login(self):
+        edit_url = reverse('catalog:product_edit', args=[self.product.pk])
+        r = self.client.get(edit_url)
+        self.assertEqual(r.status_code, 302)
+

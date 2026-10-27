@@ -26,6 +26,9 @@
         <th>Price</th>
         <th>In stock</th>
         <th>Status</th>
+        {% if user.is_admin_role %}
+        <th></th>
+        {% endif %}
       </tr>
     </thead>
     <tbody>
@@ -37,10 +40,13 @@
         <td>{{ product.price }}</td>
         <td>{{ product.quantity_in_stock }}</td>
         <td>{{ product.get_status_display }}</td>
+        {% if user.is_admin_role %}
+        <td><a href="{% url 'catalog:product_edit' product.pk %}">Edit</a></td>
+        {% endif %}
       </tr>
       {% empty %}
       <tr>
-        <td colspan="6" class="text-center text-muted py-4">No products yet.</td>
+        <td colspan="{% if user.is_admin_role %}7{% else %}6{% endif %}" class="text-center text-muted py-4">No products yet.</td>
       </tr>
       {% endfor %}
     </tbody>
