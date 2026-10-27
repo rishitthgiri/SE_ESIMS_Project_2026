@@ -2,13 +2,33 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import get_object_or_404, redirect, render
 
-from .forms import CategoryForm
-from .models import Category
+from .forms import CategoryForm, ProductForm
+from .models import Category, Product
 
 # TEMPORARY until accounts/decorators.py (Roopa) is merged.
 # Then delete this line and use:
 #   from accounts.decorators import admin_required
 admin_required = user_passes_test(lambda u: u.is_authenticated and u.is_admin_role)
+
+
+@login_required
+def product_list(request):
+    products = Product.objects.select_related('category').all()
+    return render(request, 'catalog/product_list.html', {'products': products})
+
+
+@login_required
+@admin_required
+def product_add(request):
+    if request.method == 'POST':
+        form = ProductForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Product added.')
+            return redirect('catalog:product_list')
+    else:
+        form = ProductForm()
+    return render(request, 'catalog/product_form.html', {'form': form, 'title': 'Add product'})
 
 
 @login_required
