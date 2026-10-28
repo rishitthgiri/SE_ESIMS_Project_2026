@@ -1,6 +1,7 @@
 from django import forms
 
 from catalog.models import Product
+from esims.validation import StrictIntegerField
 from suppliers.models import Supplier
 
 from .services import MAX_QUANTITY
@@ -12,7 +13,8 @@ class ProductChoiceField(forms.ModelChoiceField):
 
 
 def _quantity_field():
-    return forms.IntegerField(
+    # ESIMS-08: digits only - rejects '1e3', '+5', '5.0', ' 5 ', '-1', text, empty, 0 and > MAX_QUANTITY.
+    return StrictIntegerField(
         min_value=1,
         max_value=MAX_QUANTITY,
         widget=forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),

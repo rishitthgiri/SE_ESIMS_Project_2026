@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os
+import sys
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -158,3 +159,46 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',
     'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
 ]
+
+
+# ---------------------------------------------------------------------------
+# Sprint 2 settings
+# ---------------------------------------------------------------------------
+def _int_env(name, default, minimum=1):
+    """Read a positive integer from the environment; fall back to `default` if missing/invalid."""
+    try:
+        value = int(os.environ.get(name, default))
+    except (TypeError, ValueError):
+        return default
+    return value if value >= minimum else default
+
+
+# ESIMS-06 / FR-004 / SEC-004: idle sessions expire. Configurable via SESSION_TIMEOUT_SECONDS
+# (default 30 minutes). SAVE_EVERY_REQUEST makes the timer reset on every request, so the
+# timeout is measured from the user's LAST ACTIVITY, not from login.
+SESSION_TIMEOUT_SECONDS = _int_env('SESSION_TIMEOUT_SECONDS', 1800)
+SESSION_COOKIE_AGE = SESSION_TIMEOUT_SECONDS
+SESSION_SAVE_EVERY_REQUEST = True
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'
+
+# ESIMS-09 / SEC-006: security events go to the console (and to the database, see accounts.security).
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'security': {'format': '%(asctime)s %(levelname)s %(name)s %(message)s'},
+    },
+    'handlers': {
+        'security_console': {'class': 'logging.StreamHandler', 'formatter': 'security'},
+        'null': {'class': 'logging.NullHandler'},
+    },
+    'loggers': {
+        'esims.security': {'handlers': ['security_console'], 'level': 'INFO', 'propagate': False},
+    },
+}
+
+# Keep `manage.py test` output readable: the tests read these events from the database / assertLogs.
+if 'test' in sys.argv:
+    LOGGING['loggers']['esims.security']['handlers'] = ['null']
+

@@ -12,6 +12,13 @@
       <a href="{% url 'accounts:staff_list' %}" class="btn btn-primary">Open</a>
     </div></div>
   </div>
+  <div class="col-md-4">
+    <div class="card"><div class="card-body">
+      <h5 class="card-title">Security Log</h5>
+      <p class="card-text">Review failed logins and unauthorized access attempts.</p>
+      <a href="{% url 'accounts:security_log' %}" class="btn btn-primary">Open</a>
+    </div></div>
+  </div>
   {% endif %}
   <div class="col-md-4">
     <div class="card"><div class="card-body">
