@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block title %}Low stock{% endblock %}
+{% block content %}
+<h2>Low-stock products</h2>
+<p class="text-muted">Active products whose stock is below their reorder threshold.</p>
+{% include 'reports/_low_stock_table.html' %}
+{% endblock %}

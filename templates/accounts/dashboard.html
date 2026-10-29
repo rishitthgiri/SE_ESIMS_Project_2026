@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
-{% block title %}Dashboard{% endblock %}
+{% block title %}Dashboard
+<div class="mt-4">
+  <h5>Low-stock alerts <span class="badge bg-danger">{{ low_stock|length }}</span></h5>
+  {% include 'reports/_low_stock_table.html' with products=low_stock %}
+</div>
+{% endblock %}
 {% block content %}
 <h3>Welcome, {{ user.first_name|default:user.username }}</h3>
 <p class="text-muted">Role: {{ user.get_role_display }}</p>
@@ -23,8 +28,14 @@
   <div class="col-md-4">
     <div class="card"><div class="card-body">
       <h5 class="card-title">Inventory</h5>
-      <p class="card-text text-muted">Coming in later sprints.</p>
+      <p class="card-text">Record purchases and sales.</p>
+      <a href="{% url 'transactions:list' %}" class="btn btn-primary">Open</a>
     </div></div>
   </div>
+</div>
+
+<div class="mt-4">
+  <h5>Low-stock alerts <span class="badge bg-danger">{{ low_stock|length }}</span></h5>
+  {% include 'reports/_low_stock_table.html' with products=low_stock %}
 </div>
 {% endblock %}

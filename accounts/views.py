@@ -8,6 +8,8 @@ from django.views import View
 from django.views.defaults import permission_denied as default_permission_denied
 from django.views.generic import CreateView, ListView, UpdateView
 
+from reports.alerts import low_stock_products
+
 from .forms import EmailOrUsernameAuthenticationForm, StaffCreateForm, StaffEditForm
 from .mixins import AdminRequiredMixin
 from .models import SecurityEvent
@@ -38,7 +40,7 @@ class ESIMSLoginView(LoginView):
 
 @login_required
 def dashboard(request):
-    return render(request, 'accounts/dashboard.html')
+    return render(request, 'accounts/dashboard.html', {'low_stock': low_stock_products()})
 
 
 def permission_denied(request, exception=None):
