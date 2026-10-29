@@ -1,0 +1,19 @@
+<form method="get" class="row g-2 align-items-end mb-3">
+  <div class="col-auto">
+    <label class="form-label mb-0" for="{{ form.start.id_for_label }}">From</label>
+    {{ form.start }}
+  </div>
+  <div class="col-auto">
+    <label class="form-label mb-0" for="{{ form.end.id_for_label }}">To</label>
+    {{ form.end }}
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-primary" type="submit">Show</button>
+    <a class="btn btn-link" href="{{ request.path }}">Reset</a>
+  </div>
+</form>
+{% if form.non_field_errors %}
+<div class="alert alert-danger">{% for e in form.non_field_errors %}{{ e }}{% endfor %}</div>
+{% endif %}
+{% for e in form.start.errors %}<div class="alert alert-danger">From: {{ e }}</div>{% endfor %}
+{% for e in form.end.errors %}<div class="alert alert-danger">To: {{ e }}</div>{% endfor %}

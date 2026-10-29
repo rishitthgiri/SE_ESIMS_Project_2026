@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Top-selling products{% endblock %}
+{% block content %}
+<h2>Top-selling products</h2>
+<p class="text-muted">Ranked by units sold (stock-out transactions). Leave the dates empty to use all recorded sales. Shows the top 10.</p>
+{% include 'reports/_date_range_form.html' %}
+
+{% if form.is_valid %}
+<div class="table-responsive">
+<table class="table table-striped bg-white align-middle">
+  <thead class="table-dark">
+    <tr><th>#</th><th>Product</th><th>SKU</th><th>Category</th><th class="text-end">Units sold</th><th class="text-end">Sales amount</th></tr>
+  </thead>
+  <tbody>
+  {% for p in products %}
+    <tr>
+      <td>{{ forloop.counter }}</td>
+      <td>{{ p.name }}</td>
+      <td>{{ p.sku }}</td>
+      <td>{{ p.category.name }}</td>
+      <td class="text-end">{{ p.units_sold }}</td>
+      <td class="text-end">{{ p.revenue|floatformat:2 }}</td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="6" class="text-center text-muted py-4">No sales recorded for this range.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+{% endblock %}

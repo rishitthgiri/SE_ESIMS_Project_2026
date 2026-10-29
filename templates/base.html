@@ -20,6 +20,8 @@
       <li class="nav-item"><a class="nav-link" href="{% url 'reports:low_stock' %}">Low stock</a></li>
       {% if user.is_admin_role %}
       <li class="nav-item"><a class="nav-link" href="{% url 'suppliers:list' %}">Suppliers</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'reports:sales' %}">Reports</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'reports:top_selling' %}">Top sellers</a></li>
       <li class="nav-item"><a class="nav-link" href="{% url 'accounts:staff_list' %}">Manage Staff</a></li>
       {% endif %}
     </ul>
