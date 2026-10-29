@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}Stock and sales report{% endblock %}
+{% block content %}
+<h2>Stock and sales report</h2>
+<p class="text-muted">Pick a date range (both dates included). The sales table and the units in/out columns use the range; stock and stock value are the current figures.</p>
+{% include 'reports/_date_range_form.html' %}
+
+{% if form.is_valid %}
+<h4 class="mt-4">Sales
+  <small class="text-muted">{{ start|date:"d M Y" }} to {{ end|date:"d M Y" }}</small>
+</h4>
+<p>
+  <strong>{{ totals.units }}</strong> units sold, total amount <strong>{{ totals.amount|floatformat:2 }}</strong>
+  <a class="btn btn-sm btn-outline-secondary ms-2" href="?{{ query }}&amp;export=sales">Export sales CSV</a>
+</p>
+<div class="table-responsive">
+<table class="table table-sm table-striped bg-white align-middle">
+  <thead class="table-dark">
+    <tr><th>Transaction reference</th><th>Product</th><th class="text-end">Quantity sold</th><th class="text-end">Sale amount</th><th>Date</th><th>Staff member</th></tr>
+  </thead>
+  <tbody>
+  {% for t in sales %}
+    <tr>
+      <td><code>{{ t.transaction_id }}</code></td>
+      <td>{{ t.product.name }}</td>
+      <td class="text-end">{{ t.quantity }}</td>
+      <td class="text-end">{{ t.amount|floatformat:2 }}</td>
+      <td>{{ t.timestamp|date:"d M Y H:i" }}</td>
+      <td>{{ t.user.username }}</td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="6" class="text-center text-muted py-4">No sales in this date range.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% if totals.units and sales|length >= sales_limit %}
+<p class="text-muted small">Showing the latest {{ sales_limit }} sales. Export the CSV to get every row.</p>
+{% endif %}
+
+<h4 class="mt-4">Stock</h4>
+<p>
+  Total stock value now: <strong>{{ stock_total|floatformat:2 }}</strong>
+  <a class="btn btn-sm btn-outline-secondary ms-2" href="?{{ query }}&amp;export=stock">Export stock CSV</a>
+</p>
+<div class="table-responsive">
+<table class="table table-sm table-striped bg-white align-middle">
+  <thead class="table-dark">
+    <tr><th>Product</th><th>SKU</th><th>Category</th><th class="text-end">Current stock</th><th class="text-end">Reorder threshold</th><th class="text-end">Stock value</th><th class="text-end">Units in (range)</th><th class="text-end">Units out (range)</th></tr>
+  </thead>
+  <tbody>
+  {% for p in stock %}
+    <tr>
+      <td>{{ p.name }}{% if not p.is_active %} <span class="badge bg-secondary">disabled</span>{% endif %}</td>
+      <td>{{ p.sku }}</td>
+      <td>{{ p.category.name }}</td>
+      <td class="text-end">{{ p.quantity_in_stock }}</td>
+      <td class="text-end">{{ p.reorder_threshold }}</td>
+      <td class="text-end">{{ p.stock_value|floatformat:2 }}</td>
+      <td class="text-end">{{ p.units_in|default:0 }}</td>
+      <td class="text-end">{{ p.units_out|default:0 }}</td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="8" class="text-center text-muted py-4">No products yet.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+{% endblock %}
