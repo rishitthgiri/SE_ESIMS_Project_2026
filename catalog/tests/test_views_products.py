@@ -8,62 +8,13 @@ from django.test import TestCase
 from django.test.utils import CaptureQueriesContext
 from django.urls import reverse
 
+from catalog.models import Category, Product
 from suppliers.models import Supplier
 from transactions.forms import StockOutForm
 from transactions.models import StockTransaction
-from .models import Category, Product
-from .selectors import search_products
 
 User = get_user_model()
 PASSWORD = 'Pass@12345'
-
-
-class CategoryTests(TestCase):
-    def setUp(self):
-        self.admin = User.objects.create_user(
-            'admin1', 'admin1@esims.local', PASSWORD, role='ADMIN')
-        self.staff = User.objects.create_user(
-            'staff1', 'staff1@esims.local', PASSWORD, role='STAFF')
-
-    def test_admin_can_add_category(self):
-        self.client.login(username='admin1', password=PASSWORD)
-        r = self.client.post(reverse('catalog:category_add'),
-                             {'name': 'Mobiles', 'status': 'active'})
-        self.assertRedirects(r, reverse('catalog:category_list'))
-        self.assertTrue(Category.objects.filter(name='Mobiles').exists())
-
-    def test_duplicate_name_rejected(self):
-        Category.objects.create(name='Mobiles')
-        self.client.login(username='admin1', password=PASSWORD)
-        self.client.post(reverse('catalog:category_add'),
-                         {'name': 'mobiles', 'status': 'active'})
-        self.assertEqual(Category.objects.count(), 1)
-
-    def test_blank_name_rejected(self):
-        self.client.login(username='admin1', password=PASSWORD)
-        self.client.post(reverse('catalog:category_add'),
-                         {'name': '  ', 'status': 'active'})
-        self.assertEqual(Category.objects.count(), 0)
-
-    def test_edit_can_disable(self):
-        c = Category.objects.create(name='Audio')
-        self.client.login(username='admin1', password=PASSWORD)
-        self.client.post(reverse('catalog:category_edit', args=[c.pk]),
-                         {'name': 'Audio', 'status': 'disabled'})
-        c.refresh_from_db()
-        self.assertEqual(c.status, 'disabled')
-
-    def test_staff_blocked(self):
-        self.client.login(username='staff1', password=PASSWORD)
-        r = self.client.post(reverse('catalog:category_add'),
-                             {'name': 'Mobiles', 'status': 'active'})
-        self.assertIn(r.status_code, (302, 403))
-        self.assertEqual(Category.objects.count(), 0)
-
-    def test_anonymous_redirected_to_login(self):
-        r = self.client.get(reverse('catalog:category_list'))
-        self.assertEqual(r.status_code, 302)
-
 
 class ProductAddTests(TestCase):
     def setUp(self):
@@ -315,7 +266,6 @@ class ProductAddTests(TestCase):
         r_staff = self.client.get(reverse('catalog:product_list'))
         self.assertNotContains(r_staff, reverse('catalog:product_add'))
 
-
 class ProductEditTests(TestCase):
     def setUp(self):
         self.admin = User.objects.create_user(
@@ -524,7 +474,6 @@ class ProductEditTests(TestCase):
         r = self.client.get(edit_url)
         self.assertEqual(r.status_code, 302)
 
-
 class ProductDisableTests(TestCase):
     def setUp(self):
         self.admin = User.objects.create_user(
@@ -611,7 +560,6 @@ class ProductDisableTests(TestCase):
         self.client.force_login(self.admin)
         response = self.client.post(reverse('catalog:product_disable', args=[uuid.uuid4()]))
         self.assertEqual(response.status_code, 404)
-
 
 class ProductSearchFilterTests(TestCase):
     def setUp(self):
@@ -742,7 +690,6 @@ class ProductSearchFilterTests(TestCase):
         self.assertContains(response, f'value="{self.cat_laptops.pk}" selected')
         self.assertContains(response, 'value="active" selected')
 
-
 class ProductStockDisplayTests(TestCase):
     def setUp(self):
         self.admin = User.objects.create_user(
@@ -815,7 +762,6 @@ class ProductStockDisplayTests(TestCase):
         self.assertNotContains(response_kb, 'Dell 27 Inch 4K')
         self.assertNotContains(response_kb, 'LG UltraWide 34')
 
-
 class ProductPaginationSelectorTests(TestCase):
     def setUp(self):
         self.admin = User.objects.create_user(
@@ -859,17 +805,6 @@ class ProductPaginationSelectorTests(TestCase):
         self.assertEqual(out_of_range.status_code, 200)
         self.assertEqual(out_of_range.context['page_obj'].number, 2)
 
-    def test_selector_filters_and_ignores_invalid_category_uuid(self):
-        match = self.make_product(1, name='Gaming Keyboard')
-        self.make_product(2, sku='MOUSE-001', name='Gaming Mouse', status=Product.Status.DISABLED)
-        other_category = Category.objects.create(name='Other Pagination')
-        self.make_product(3, category=other_category, name='Gaming Monitor')
-
-        self.assertEqual(list(search_products(q='keyboard').values_list('pk', flat=True)), [match.pk])
-        self.assertEqual(list(search_products(category=str(self.category.pk)).values_list('pk', flat=True)), [match.pk, Product.objects.get(sku='MOUSE-001').pk])
-        self.assertEqual(list(search_products(status='disabled').values_list('sku', flat=True)), ['MOUSE-001'])
-        self.assertEqual(list(search_products(q='gaming', category=str(self.category.pk), status='active').values_list('pk', flat=True)), [match.pk])
-        self.assertEqual(search_products(category='not-a-uuid').count(), 3)
 
     def test_query_count_does_not_grow_with_product_count(self):
         for number in range(5):
@@ -899,4 +834,47 @@ class ProductPaginationSelectorTests(TestCase):
         self.assertLess(time.perf_counter() - started, 2.0)
 
 
+class CatalogPermissionMatrixTests(TestCase):
+    def setUp(self):
+        self.admin = User.objects.create_user(
+            'matrix-admin', 'matrix-admin@esims.local', PASSWORD, role='ADMIN',
+        )
+        self.staff = User.objects.create_user(
+            'matrix-staff', 'matrix-staff@esims.local', PASSWORD, role='STAFF',
+        )
+        self.category = Category.objects.create(name='Permission Matrix')
+        self.product = Product.objects.create(
+            sku='MATRIX-001', name='Permission Test Product', category=self.category,
+            price=Decimal('10.00'),
+        )
 
+    def test_every_named_catalog_url_for_anonymous_staff_and_admin(self):
+        urls = {
+            'product_root': '/catalog/',
+            'product_list': reverse('catalog:product_list'),
+            'product_add': reverse('catalog:product_add'),
+            'product_edit': reverse('catalog:product_edit', args=[self.product.pk]),
+            'product_disable': reverse('catalog:product_disable', args=[self.product.pk]),
+            'category_list': reverse('catalog:category_list'),
+            'category_add': reverse('catalog:category_add'),
+            'category_edit': reverse('catalog:category_edit', args=[self.category.pk]),
+        }
+        cases = (
+            ('anonymous', None),
+            ('staff', self.staff),
+            ('admin', self.admin),
+        )
+        staff_allowed = {'product_root', 'product_list'}
+
+        for role_name, user in cases:
+            if user is None:
+                self.client.logout()
+            else:
+                self.client.force_login(user)
+            for url_name, path in urls.items():
+                with self.subTest(role=role_name, url=url_name):
+                    response = self.client.get(path)
+                    if role_name == 'admin' or (role_name == 'staff' and url_name in staff_allowed):
+                        self.assertEqual(response.status_code, 200)
+                    else:
+                        self.assertEqual(response.status_code, 302)

@@ -7,6 +7,7 @@ from django.views.decorators.http import require_http_methods
 from .forms import CategoryForm, ProductForm
 from .models import Category, Product
 from .selectors import search_products
+from .services import disable_product
 
 # TEMPORARY until accounts/decorators.py (Roopa) is merged.
 # Then delete this line and use:
@@ -71,11 +72,9 @@ def product_edit(request, pk):
 def product_disable(request, pk):
     product = get_object_or_404(Product, pk=pk)
     if request.method == 'POST':
-        if product.status == Product.Status.DISABLED:
+        if not disable_product(product):
             messages.info(request, 'Product is already disabled.')
         else:
-            product.status = Product.Status.DISABLED
-            product.save(update_fields=['status'])
             messages.success(request, 'Product disabled.')
         return redirect('catalog:product_list')
 
