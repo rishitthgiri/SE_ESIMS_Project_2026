@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Audit trail{% endblock %}
+{% block content %}
+{% include "transactions/_nav.html" with active="audit" %}
+<h1 class="h3 mb-1">Stock audit trail</h1>
+<p class="text-muted">Every stock-in and stock-out, who recorded it and when. This list is read-only: records cannot be edited or deleted.</p>
+
+<form method="get" class="card card-body shadow-sm mb-3">
+  {% if filter_form.non_field_errors %}
+  <div class="alert alert-danger py-2">{% for e in filter_form.non_field_errors %}{{ e }}{% endfor %}</div>
+  {% endif %}
+  <div class="row g-2 align-items-end">
+    <div class="col-md-2"><label class="form-label small mb-0" for="{{ filter_form.type.id_for_label }}">Type</label>{{ filter_form.type }}</div>
+    <div class="col-md-2"><label class="form-label small mb-0" for="{{ filter_form.user.id_for_label }}">User</label>{{ filter_form.user }}</div>
+    <div class="col-md-3"><label class="form-label small mb-0" for="{{ filter_form.q.id_for_label }}">Product or transaction ID</label>{{ filter_form.q }}</div>
+    <div class="col-md-2"><label class="form-label small mb-0" for="{{ filter_form.start.id_for_label }}">From</label>{{ filter_form.start }}</div>
+    <div class="col-md-2"><label class="form-label small mb-0" for="{{ filter_form.end.id_for_label }}">To</label>{{ filter_form.end }}</div>
+    <div class="col-md-1 d-grid"><button type="submit" class="btn btn-sm btn-dark">Filter</button></div>
+  </div>
+  {% for field in filter_form %}{% for e in field.errors %}<div class="text-danger small mt-1">{{ field.label }}: {{ e }}</div>{% endfor %}{% endfor %}
+</form>
+
+<p class="small text-muted mb-1">{{ total }} record{{ total|pluralize }} found. <a href="{% url 'transactions:audit' %}">Clear filters</a></p>
+<div class="table-responsive">
+<table class="table table-sm table-striped bg-white align-middle">
+  <thead class="table-dark">
+    <tr><th>Transaction ID</th><th>Date and time</th><th>Type</th><th>Product</th><th class="text-end">Qty</th><th>Supplier</th><th>Recorded by</th></tr>
+  </thead>
+  <tbody>
+  {% for t in transactions %}
+    <tr>
+      <td><code>{{ t.transaction_id }}</code></td>
+      <td>{{ t.timestamp|date:"d M Y H:i:s" }}</td>
+      <td>{% if t.transaction_type == 'IN' %}<span class="badge bg-success">IN</span>{% else %}<span class="badge bg-danger">OUT</span>{% endif %}</td>
+      <td>{{ t.product.sku }} - {{ t.product.name }}</td>
+      <td class="text-end">{{ t.quantity }}</td>
+      <td>{{ t.supplier.name|default:"-" }}</td>
+      <td>{{ t.user.username }}</td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="7" class="text-center text-muted py-4">No transactions match these filters.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% if is_paginated %}
+<nav>
+  {% if page_obj.has_previous %}<a class="btn btn-sm btn-outline-secondary" href="?{% if querystring %}{{ querystring }}&{% endif %}page={{ page_obj.previous_page_number }}">Previous</a>{% endif %}
+  <span class="mx-2">Page {{ page_obj.number }} of {{ paginator.num_pages }}</span>
+  {% if page_obj.has_next %}<a class="btn btn-sm btn-outline-secondary" href="?{% if querystring %}{{ querystring }}&{% endif %}page={{ page_obj.next_page_number }}">Next</a>{% endif %}
+</nav>
+{% endif %}
+{% endblock %}
