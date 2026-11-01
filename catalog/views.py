@@ -1,13 +1,12 @@
-import uuid
-
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.db.models import Q
+from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_http_methods
 
 from .forms import CategoryForm, ProductForm
 from .models import Category, Product
+from .selectors import search_products
 
 # TEMPORARY until accounts/decorators.py (Roopa) is merged.
 # Then delete this line and use:
@@ -17,28 +16,17 @@ admin_required = user_passes_test(lambda u: u.is_authenticated and u.is_admin_ro
 
 @login_required
 def product_list(request):
-    products = Product.objects.select_related('category').all()
     q = request.GET.get('q', '').strip()
     category_id = request.GET.get('category', '').strip()
     status = request.GET.get('status', '').strip()
-
-    if q:
-        products = products.filter(Q(name__icontains=q) | Q(sku__icontains=q))
-
-    if category_id:
-        try:
-            val = uuid.UUID(category_id)
-            products = products.filter(category_id=val)
-        except (ValueError, AttributeError):
-            pass
-
-    if status in (Product.Status.ACTIVE, Product.Status.DISABLED):
-        products = products.filter(status=status)
-
+    page_obj = Paginator(search_products(q, category_id, status), 25).get_page(
+        request.GET.get('page')
+    )
     categories = Category.objects.all()
     is_filtered = bool(q or category_id or status)
     context = {
-        'products': products,
+        'products': page_obj.object_list,
+        'page_obj': page_obj,
         'categories': categories,
         'q': q,
         'selected_category': category_id,
