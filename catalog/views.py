@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_http_methods
 
 from .forms import CategoryForm, ProductForm
 from .models import Category, Product
@@ -74,6 +75,23 @@ def product_edit(request, pk):
     else:
         form = ProductForm(instance=product)
     return render(request, 'catalog/product_form.html', {'form': form, 'title': 'Edit product'})
+
+
+@login_required
+@admin_required
+@require_http_methods(['GET', 'POST'])
+def product_disable(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    if request.method == 'POST':
+        if product.status == Product.Status.DISABLED:
+            messages.info(request, 'Product is already disabled.')
+        else:
+            product.status = Product.Status.DISABLED
+            product.save(update_fields=['status'])
+            messages.success(request, 'Product disabled.')
+        return redirect('catalog:product_list')
+
+    return render(request, 'catalog/product_confirm_disable.html', {'product': product})
 
 
 @login_required

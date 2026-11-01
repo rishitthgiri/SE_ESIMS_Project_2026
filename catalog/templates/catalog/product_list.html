@@ -64,9 +64,20 @@
         <td>{{ product.category.name }}</td>
         <td>{{ product.price }}</td>
         <td>{{ product.quantity_in_stock }}</td>
-        <td>{{ product.get_status_display }}</td>
+        <td>
+          {% if product.status == 'disabled' %}
+          <span class="badge text-bg-secondary">Disabled</span>
+          {% else %}
+          {{ product.get_status_display }}
+          {% endif %}
+        </td>
         {% if user.is_admin_role %}
-        <td><a href="{% url 'catalog:product_edit' product.pk %}">Edit</a></td>
+        <td>
+          <a href="{% url 'catalog:product_edit' product.pk %}">Edit</a>
+          {% if product.status == 'active' %}
+          <a class="ms-2" href="{% url 'catalog:product_disable' product.pk %}">Disable</a>
+          {% endif %}
+        </td>
         {% endif %}
       </tr>
       {% empty %}
