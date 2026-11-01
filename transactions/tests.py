@@ -5,34 +5,15 @@ Run:  python manage.py test transactions -v 2
 import uuid
 from unittest import mock
 
-from django.contrib.auth import get_user_model
 from django.db import IntegrityError, transaction
-from django.test import TestCase
 from django.urls import reverse
 
-from catalog.models import Category, Product
+from catalog.models import Product
 from suppliers.models import Supplier
 
 from . import services
 from .models import StockTransaction
-
-User = get_user_model()
-
-
-class StockTestBase(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.staff = User.objects.create_user('staff1', 'staff1@example.com', 'pass12345', role='STAFF')
-        cls.admin = User.objects.create_user('admin1', 'admin1@example.com', 'pass12345', role='ADMIN')
-        cls.category = Category.objects.create(name='Mobiles')
-        cls.supplier = Supplier.objects.create(name='Acme Distributors', contact='acme@example.com')
-        cls.product = Product.objects.create(
-            sku='MOB-001', name='Phone X', category=cls.category,
-            price='19999.00', quantity_in_stock=5, reorder_threshold=2,
-        )
-
-    def stock(self, product=None):
-        return Product.objects.get(pk=(product or self.product).pk).quantity_in_stock
+from .testutils import StockTestBase, new_token
 
 
 class StockInServiceTests(StockTestBase):
@@ -165,6 +146,7 @@ class StockViewTests(StockTestBase):
         self.assertEqual(self.client.get(reverse('transactions:stock_in')).status_code, 200)
         resp = self.client.post(reverse('transactions:stock_in'), {
             'product': self.product.pk, 'supplier': self.supplier.pk, 'quantity': 4,
+            'request_token': new_token(),
         }, follow=True)
         self.assertEqual(self.stock(), 9)
         txn = StockTransaction.objects.get()
@@ -174,7 +156,7 @@ class StockViewTests(StockTestBase):
     def test_stock_out_form_flow(self):
         self.client.force_login(self.staff)
         resp = self.client.post(reverse('transactions:stock_out'), {
-            'product': self.product.pk, 'quantity': 2,
+            'product': self.product.pk, 'quantity': 2, 'request_token': new_token(),
         }, follow=True)
         self.assertEqual(self.stock(), 3)
         self.assertContains(resp, 'Stock-out recorded')
@@ -182,7 +164,7 @@ class StockViewTests(StockTestBase):
     def test_over_sale_shows_clear_error_and_changes_nothing(self):
         self.client.force_login(self.staff)
         resp = self.client.post(reverse('transactions:stock_out'), {
-            'product': self.product.pk, 'quantity': 6,
+            'product': self.product.pk, 'quantity': 6, 'request_token': new_token(),
         })
         self.assertEqual(resp.status_code, 200)
         self.assertContains(resp, 'Only 5 unit(s)')
@@ -195,7 +177,7 @@ class StockViewTests(StockTestBase):
         for bad in ('-5', '0', 'abc', '', '99999999999'):
             with self.subTest(quantity=bad):
                 resp = self.client.post(reverse('transactions:stock_out'), {
-                    'product': self.product.pk, 'quantity': bad,
+                    'product': self.product.pk, 'quantity': bad, 'request_token': new_token(),
                 })
                 self.assertEqual(resp.status_code, 200)
                 self.assertEqual(self.stock(), 5)
@@ -229,3 +211,23 @@ class StockViewTests(StockTestBase):
         self.client.force_login(self.staff)
         resp = self.client.get(reverse('transactions:list') + '?type=IN')
         self.assertEqual(len(resp.context['page']), 1)
+
+    def test_unexpected_stock_rule_failure_is_shown_on_the_form(self):
+        """If the service refuses (e.g. the product was disabled a moment ago) the user sees why, nothing is saved"""
+        self.client.force_login(self.staff)
+        with mock.patch.object(services, 'record_stock_in',
+                               side_effect=services.InvalidStockOperation('Product was just disabled.')):
+            resp = self.client.post(reverse('transactions:stock_in'), {
+                'product': self.product.pk, 'supplier': self.supplier.pk, 'quantity': 1,
+                'request_token': new_token(),
+            })
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Product was just disabled.')
+        with mock.patch.object(services, 'record_stock_out',
+                               side_effect=services.InvalidStockOperation('Product was just disabled.')):
+            resp = self.client.post(reverse('transactions:stock_out'), {
+                'product': self.product.pk, 'quantity': 1, 'request_token': new_token(),
+            })
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Product was just disabled.')
+        self.assertEqual(StockTransaction.objects.count(), 0)
