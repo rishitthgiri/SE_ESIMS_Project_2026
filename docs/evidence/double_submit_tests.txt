@@ -1,0 +1,58 @@
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+Found 16 test(s).
+Operations to perform:
+  Synchronize unmigrated apps: messages, staticfiles
+  Apply all migrations: accounts, admin, auth, catalog, contenttypes, sessions, suppliers, transactions
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0001_initial... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying accounts.0001_initial... OK
+  Applying accounts.0002_securityevent... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying suppliers.0001_initial... OK
+  Applying catalog.0001_initial... OK
+  Applying sessions.0001_initial... OK
+  Applying transactions.0001_initial...test_database_enforces_unique_token (transactions.test_double_submit.DoubleSubmitServiceTests.test_database_enforces_unique_token) ... ok
+test_different_tokens_are_two_genuine_transactions (transactions.test_double_submit.DoubleSubmitServiceTests.test_different_tokens_are_two_genuine_transactions) ... ok
+test_duplicate_is_reported_even_when_stock_would_now_be_too_low (transactions.test_double_submit.DoubleSubmitServiceTests.test_duplicate_is_reported_even_when_stock_would_now_be_too_low)
+A retry of a successful sale must say 'already recorded', not 'insufficient stock' ... ok
+test_malformed_token_is_rejected (transactions.test_double_submit.DoubleSubmitServiceTests.test_malformed_token_is_rejected) ... ok
+test_no_token_still_works (transactions.test_double_submit.DoubleSubmitServiceTests.test_no_token_still_works) ... ok
+test_race_where_the_check_misses_is_still_caught_and_rolled_back (transactions.test_double_submit.DoubleSubmitServiceTests.test_race_where_the_check_misses_is_still_caught_and_rolled_back)
+Two requests pass the 'already used?' check at once: the unique column stops the second ... ok
+test_same_token_twice_for_stock_in_records_only_one (transactions.test_double_submit.DoubleSubmitServiceTests.test_same_token_twice_for_stock_in_records_only_one)
+ST-REL-01 / NFR-004 ... ok
+test_same_token_twice_for_stock_out_records_only_one (transactions.test_double_submit.DoubleSubmitServiceTests.test_same_token_twice_for_stock_out_records_only_one) ... ok
+test_token_cannot_be_reused_by_another_user_or_for_another_action (transactions.test_double_submit.DoubleSubmitServiceTests.test_token_cannot_be_reused_by_another_user_or_for_another_action) ... ok
+test_double_post_of_stock_in_creates_one_record (transactions.test_double_submit.DoubleSubmitViewTests.test_double_post_of_stock_in_creates_one_record) ... ok
+test_double_post_of_stock_out_creates_one_record (transactions.test_double_submit.DoubleSubmitViewTests.test_double_post_of_stock_out_creates_one_record) ... ok
+test_forms_carry_a_fresh_hidden_token_each_time (transactions.test_double_submit.DoubleSubmitViewTests.test_forms_carry_a_fresh_hidden_token_each_time) ... ok
+test_page_has_the_double_click_guard (transactions.test_double_submit.DoubleSubmitViewTests.test_page_has_the_double_click_guard) ... ok
+test_post_with_a_garbage_token_is_refused (transactions.test_double_submit.DoubleSubmitViewTests.test_post_with_a_garbage_token_is_refused) ... ok
+test_post_without_a_token_is_refused (transactions.test_double_submit.DoubleSubmitViewTests.test_post_without_a_token_is_refused) ... ok
+test_rejected_sale_does_not_use_up_the_token (transactions.test_double_submit.DoubleSubmitViewTests.test_rejected_sale_does_not_use_up_the_token) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 1.578s
+
+OK
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+ OK
+System check identified no issues (0 silenced).

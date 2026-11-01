@@ -1,0 +1,12 @@
+Name                       Stmts   Miss  Cover   Missing
+--------------------------------------------------------
+transactions\__init__.py       0      0   100%
+transactions\admin.py         13      0   100%
+transactions\apps.py           4      0   100%
+transactions\forms.py         43      0   100%
+transactions\models.py        27      1    96%   56
+transactions\services.py      85      3    96%   106-107, 124
+transactions\urls.py           4      0   100%
+transactions\views.py         98      0   100%
+--------------------------------------------------------
+TOTAL                        274      4    99%
