@@ -231,3 +231,31 @@ class StockViewTests(StockTestBase):
         self.assertEqual(resp.status_code, 200)
         self.assertContains(resp, 'Product was just disabled.')
         self.assertEqual(StockTransaction.objects.count(), 0)
+
+
+class EdgeCaseCoverageTests(StockTestBase):
+    """Extra edge cases (STP: IT-STOCK-01/02, FR-010/011, FR-013)."""
+
+    def test_stock_out_of_a_deleted_product_is_rejected(self):
+        """A product that no longer exists cannot be used in a transaction"""
+        stale_product = Product.objects.get(pk=self.product.pk)
+        Product.objects.filter(pk=self.product.pk).delete()
+        with self.assertRaises(services.InvalidStockOperation) as ctx:
+            services.record_stock_out(product=stale_product, quantity=1, user=self.staff)
+        self.assertIn('does not exist', str(ctx.exception))
+        self.assertEqual(StockTransaction.objects.count(), 0)
+
+    def test_unrelated_integrity_error_is_not_hidden(self):
+        """An IntegrityError that is not a duplicate submit is re-raised and nothing is saved"""
+        with mock.patch.object(StockTransaction.objects, 'create', side_effect=IntegrityError('boom')):
+            with self.assertRaises(IntegrityError):
+                services.record_stock_out(product=self.product, quantity=1, user=self.staff)
+        self.assertEqual(self.stock(), 5)
+        self.assertEqual(StockTransaction.objects.count(), 0)
+
+    def test_transaction_string_shows_type_quantity_and_id(self):
+        """The readable form of a transaction names its type, quantity and ID"""
+        txn = services.record_stock_in(product=self.product, supplier=self.supplier, quantity=4, user=self.staff)
+        text = str(txn)
+        self.assertIn('4', text)
+        self.assertIn(str(txn.transaction_id), text)
