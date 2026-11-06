@@ -6,6 +6,8 @@ from django.test import TestCase
 from django.urls import reverse
 
 from suppliers.models import Supplier
+from transactions.forms import StockOutForm
+from transactions.models import StockTransaction
 from .models import Category, Product
 
 User = get_user_model()
@@ -517,6 +519,94 @@ class ProductEditTests(TestCase):
         edit_url = reverse('catalog:product_edit', args=[self.product.pk])
         r = self.client.get(edit_url)
         self.assertEqual(r.status_code, 302)
+
+
+class ProductDisableTests(TestCase):
+    def setUp(self):
+        self.admin = User.objects.create_user(
+            'admin1', 'admin1@esims.local', PASSWORD, role='ADMIN'
+        )
+        self.staff = User.objects.create_user(
+            'staff1', 'staff1@esims.local', PASSWORD, role='STAFF'
+        )
+        self.category = Category.objects.create(name='Laptops')
+        self.product = Product.objects.create(
+            sku='LAP-DIS-001', name='Disable Test Laptop', category=self.category,
+            price=Decimal('1200.00'), quantity_in_stock=10,
+        )
+        self.url = reverse('catalog:product_disable', args=[self.product.pk])
+
+    def test_admin_post_disables_product_without_changing_stock(self):
+        self.client.force_login(self.admin)
+
+        response = self.client.post(self.url)
+
+        self.assertRedirects(response, reverse('catalog:product_list'))
+        self.product.refresh_from_db()
+        self.assertEqual(self.product.status, Product.Status.DISABLED)
+        self.assertEqual(self.product.quantity_in_stock, 10)
+        self.assertTrue(Product.objects.filter(pk=self.product.pk).exists())
+
+    def test_get_shows_confirmation_without_disabling(self):
+        self.client.force_login(self.admin)
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.product.name)
+        self.assertContains(response, 'csrfmiddlewaretoken')
+        self.product.refresh_from_db()
+        self.assertEqual(self.product.status, Product.Status.ACTIVE)
+
+    def test_product_list_only_offers_disable_for_active_products(self):
+        self.client.force_login(self.admin)
+        response = self.client.get(reverse('catalog:product_list'))
+        self.assertContains(response, self.url)
+
+        self.product.status = Product.Status.DISABLED
+        self.product.save(update_fields=['status'])
+        response = self.client.get(reverse('catalog:product_list'))
+        self.assertContains(response, 'Disabled')
+        self.assertNotContains(response, self.url)
+
+    def test_staff_is_blocked_and_anonymous_user_is_redirected(self):
+        self.client.force_login(self.staff)
+        self.assertIn(self.client.post(self.url).status_code, (302, 403))
+        self.product.refresh_from_db()
+        self.assertEqual(self.product.status, Product.Status.ACTIVE)
+
+        self.client.logout()
+        response = self.client.post(self.url)
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/login/', response.url)
+
+    def test_disabling_preserves_stock_transaction_history(self):
+        transaction = StockTransaction.objects.create(
+            product=self.product, user=self.admin,
+            transaction_type=StockTransaction.Type.OUT, quantity=1,
+        )
+        self.client.force_login(self.admin)
+
+        self.client.post(self.url)
+
+        self.assertTrue(StockTransaction.objects.filter(pk=transaction.pk).exists())
+        self.assertEqual(StockOutForm().fields['product'].queryset.filter(
+            pk=self.product.pk
+        ).count(), 0)
+
+    def test_already_disabled_product_gets_harmless_message(self):
+        self.product.status = Product.Status.DISABLED
+        self.product.save(update_fields=['status'])
+        self.client.force_login(self.admin)
+
+        response = self.client.post(self.url, follow=True)
+
+        self.assertContains(response, 'Product is already disabled.')
+
+    def test_unknown_product_returns_404(self):
+        self.client.force_login(self.admin)
+        response = self.client.post(reverse('catalog:product_disable', args=[uuid.uuid4()]))
+        self.assertEqual(response.status_code, 404)
 
 
 class ProductSearchFilterTests(TestCase):

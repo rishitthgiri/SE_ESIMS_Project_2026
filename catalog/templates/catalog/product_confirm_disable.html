@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Disable product{% endblock %}
+{% block content %}
+<h2>Disable product</h2>
+<p>Disable <strong>{{ product.name }}</strong> (SKU: {{ product.sku }})?</p>
+<p>The product and its stock transaction history will be kept.</p>
+<form method="post">
+  {% csrf_token %}
+  <button class="btn btn-danger" type="submit">Disable</button>
+  <a class="btn btn-outline-secondary" href="{% url 'catalog:product_list' %}">Cancel</a>
+</form>
+{% endblock %}
