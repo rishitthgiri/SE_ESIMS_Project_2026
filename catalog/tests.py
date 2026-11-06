@@ -1,14 +1,18 @@
 from decimal import Decimal
+import time
 import uuid
 
 from django.contrib.auth import get_user_model
+from django.db import connection
 from django.test import TestCase
+from django.test.utils import CaptureQueriesContext
 from django.urls import reverse
 
 from suppliers.models import Supplier
 from transactions.forms import StockOutForm
 from transactions.models import StockTransaction
 from .models import Category, Product
+from .selectors import search_products
 
 User = get_user_model()
 PASSWORD = 'Pass@12345'
@@ -810,6 +814,89 @@ class ProductStockDisplayTests(TestCase):
         self.assertContains(response_kb, '55')
         self.assertNotContains(response_kb, 'Dell 27 Inch 4K')
         self.assertNotContains(response_kb, 'LG UltraWide 34')
+
+
+class ProductPaginationSelectorTests(TestCase):
+    def setUp(self):
+        self.admin = User.objects.create_user(
+            'admin1', 'admin1@esims.local', PASSWORD, role='ADMIN'
+        )
+        self.category = Category.objects.create(name='Pagination')
+        self.client.force_login(self.admin)
+
+    def make_product(self, number, **overrides):
+        values = {
+            'sku': f'PAGE-{number:04d}',
+            'name': f'Pagination Product {number:04d}',
+            'category': self.category,
+            'price': Decimal('10.00'),
+            'status': Product.Status.ACTIVE,
+        }
+        values.update(overrides)
+        return Product.objects.create(**values)
+
+    def test_next_page_preserves_search_filters(self):
+        for number in range(26):
+            self.make_product(number)
+
+        response = self.client.get(reverse('catalog:product_list'), {
+            'q': 'Pagination', 'category': str(self.category.pk), 'status': 'active',
+        })
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Page 1 of 2')
+        self.assertContains(response, f'q=Pagination&amp;category={self.category.pk}&amp;status=active&amp;page=2')
+
+    def test_invalid_and_out_of_range_pages_do_not_crash(self):
+        for number in range(30):
+            self.make_product(number)
+
+        invalid = self.client.get(reverse('catalog:product_list'), {'page': 'abc'})
+        out_of_range = self.client.get(reverse('catalog:product_list'), {'page': '999'})
+
+        self.assertEqual(invalid.status_code, 200)
+        self.assertEqual(invalid.context['page_obj'].number, 1)
+        self.assertEqual(out_of_range.status_code, 200)
+        self.assertEqual(out_of_range.context['page_obj'].number, 2)
+
+    def test_selector_filters_and_ignores_invalid_category_uuid(self):
+        match = self.make_product(1, name='Gaming Keyboard')
+        self.make_product(2, sku='MOUSE-001', name='Gaming Mouse', status=Product.Status.DISABLED)
+        other_category = Category.objects.create(name='Other Pagination')
+        self.make_product(3, category=other_category, name='Gaming Monitor')
+
+        self.assertEqual(list(search_products(q='keyboard').values_list('pk', flat=True)), [match.pk])
+        self.assertEqual(list(search_products(category=str(self.category.pk)).values_list('pk', flat=True)), [match.pk, Product.objects.get(sku='MOUSE-001').pk])
+        self.assertEqual(list(search_products(status='disabled').values_list('sku', flat=True)), ['MOUSE-001'])
+        self.assertEqual(list(search_products(q='gaming', category=str(self.category.pk), status='active').values_list('pk', flat=True)), [match.pk])
+        self.assertEqual(search_products(category='not-a-uuid').count(), 3)
+
+    def test_query_count_does_not_grow_with_product_count(self):
+        for number in range(5):
+            self.make_product(number)
+        with CaptureQueriesContext(connection) as small_capture:
+            self.client.get(reverse('catalog:product_list'))
+        for number in range(5, 50):
+            self.make_product(number)
+        with CaptureQueriesContext(connection) as large_capture:
+            self.client.get(reverse('catalog:product_list'))
+
+        self.assertEqual(len(small_capture), len(large_capture))
+
+    def test_search_response_with_500_products_is_under_two_seconds(self):
+        Product.objects.bulk_create([
+            Product(
+                sku=f'TIME-{number:04d}', name=f'Timing Product {number:04d}',
+                category=self.category, price=Decimal('10.00'),
+            )
+            for number in range(500)
+        ])
+        started = time.perf_counter()
+
+        response = self.client.get(reverse('catalog:product_list'), {'q': 'Timing'})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertLess(time.perf_counter() - started, 2.0)
 
 
 
