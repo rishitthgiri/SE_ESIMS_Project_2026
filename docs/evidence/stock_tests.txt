@@ -1,5 +1,5 @@
 Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
-Found 73 test(s).
+Found 76 test(s).
 Operations to perform:
   Synchronize unmigrated apps: messages, staticfiles
   Apply all migrations: accounts, admin, auth, catalog, contenttypes, sessions, suppliers, transactions
@@ -82,6 +82,12 @@ test_stock_in_takes_three_screens (transactions.test_usability.FewScreensTests.t
 ST-USE-01 / NFR-003 ... ok
 test_stock_out_takes_three_screens (transactions.test_usability.FewScreensTests.test_stock_out_takes_three_screens)
 ST-USE-01 / NFR-003 ... ok
+test_stock_out_of_a_deleted_product_is_rejected (transactions.tests.EdgeCaseCoverageTests.test_stock_out_of_a_deleted_product_is_rejected)
+A product that no longer exists cannot be used in a transaction ... ok
+test_transaction_string_shows_type_quantity_and_id (transactions.tests.EdgeCaseCoverageTests.test_transaction_string_shows_type_quantity_and_id)
+The readable form of a transaction names its type, quantity and ID ... ok
+test_unrelated_integrity_error_is_not_hidden (transactions.tests.EdgeCaseCoverageTests.test_unrelated_integrity_error_is_not_hidden)
+An IntegrityError that is not a duplicate submit is re-raised and nothing is saved ... ok
 test_stock_in_increases_stock_and_saves_transaction (transactions.tests.StockInServiceTests.test_stock_in_increases_stock_and_saves_transaction)
 IT-STOCK-01 / FR-010 ... ok
 test_stock_in_rejects_bad_quantities (transactions.tests.StockInServiceTests.test_stock_in_rejects_bad_quantities)
@@ -124,7 +130,7 @@ test_services_know_nothing_about_http (transactions.test_stock_logic.SeparationF
 test_views_do_no_stock_arithmetic (transactions.test_stock_logic.SeparationFromUITests.test_views_do_no_stock_arithmetic) ... ok
 
 ----------------------------------------------------------------------
-Ran 73 tests in 21.223s
+Ran 76 tests in 25.818s
 
 OK
 Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...

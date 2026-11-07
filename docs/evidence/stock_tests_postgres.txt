@@ -1,0 +1,138 @@
+Creating test database for alias 'default' ('test_esims')...
+Found 76 test(s).
+Operations to perform:
+  Synchronize unmigrated apps: messages, staticfiles
+  Apply all migrations: accounts, admin, auth, catalog, contenttypes, sessions, suppliers, transactions
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0001_initial... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying accounts.0001_initial... OK
+  Applying accounts.0002_securityevent... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying suppliers.0001_initial... OK
+  Applying catalog.0001_initial... OK
+  Applying sessions.0001_initial... OK
+  Applying transactions.0001_initial...test_admin_can_open_audit_list_and_sees_everyones_transactions (transactions.test_audit.AuditAccessTests.test_admin_can_open_audit_list_and_sees_everyones_transactions) ... ok
+test_audit_page_cannot_change_data (transactions.test_audit.AuditAccessTests.test_audit_page_cannot_change_data)
+Read-only: POST/PUT/DELETE are not allowed ... ok
+test_logged_out_visitor_is_sent_to_login (transactions.test_audit.AuditAccessTests.test_logged_out_visitor_is_sent_to_login) ... ok
+test_staff_get_403_and_the_attempt_is_logged (transactions.test_audit.AuditAccessTests.test_staff_get_403_and_the_attempt_is_logged)
+SEC-002 + SEC-006: Staff cannot open the audit list ... ok
+test_backwards_date_range_shows_error_and_no_rows (transactions.test_audit.AuditFilterTests.test_backwards_date_range_shows_error_and_no_rows) ... ok
+test_filter_by_date_range (transactions.test_audit.AuditFilterTests.test_filter_by_date_range) ... ok
+test_filter_by_product_sku_or_name (transactions.test_audit.AuditFilterTests.test_filter_by_product_sku_or_name) ... ok
+test_filter_by_transaction_id (transactions.test_audit.AuditFilterTests.test_filter_by_transaction_id) ... ok
+test_filter_by_type (transactions.test_audit.AuditFilterTests.test_filter_by_type) ... ok
+test_filter_by_user (transactions.test_audit.AuditFilterTests.test_filter_by_user) ... ok
+test_garbage_filter_input_is_rejected_safely (transactions.test_audit.AuditFilterTests.test_garbage_filter_input_is_rejected_safely) ... ok
+test_pagination_keeps_filters (transactions.test_audit.AuditFilterTests.test_pagination_keeps_filters) ... ok
+test_audit_records_cannot_be_edited_or_deleted (transactions.test_audit.AuditRecordTests.test_audit_records_cannot_be_edited_or_deleted)
+FR-014: records are immutable ... ok
+test_django_admin_screen_is_read_only (transactions.test_audit.AuditRecordTests.test_django_admin_screen_is_read_only) ... ok
+test_every_transaction_stores_user_timestamp_and_quantity (transactions.test_audit.AuditRecordTests.test_every_transaction_stores_user_timestamp_and_quantity)
+ST-STOCK-04 / FR-014: user, timestamp and quantity are present on every record ... ok
+test_database_enforces_unique_token (transactions.test_double_submit.DoubleSubmitServiceTests.test_database_enforces_unique_token) ... ok
+test_different_tokens_are_two_genuine_transactions (transactions.test_double_submit.DoubleSubmitServiceTests.test_different_tokens_are_two_genuine_transactions) ... ok
+test_duplicate_is_reported_even_when_stock_would_now_be_too_low (transactions.test_double_submit.DoubleSubmitServiceTests.test_duplicate_is_reported_even_when_stock_would_now_be_too_low)
+A retry of a successful sale must say 'already recorded', not 'insufficient stock' ... ok
+test_malformed_token_is_rejected (transactions.test_double_submit.DoubleSubmitServiceTests.test_malformed_token_is_rejected) ... ok
+test_no_token_still_works (transactions.test_double_submit.DoubleSubmitServiceTests.test_no_token_still_works) ... ok
+test_race_where_the_check_misses_is_still_caught_and_rolled_back (transactions.test_double_submit.DoubleSubmitServiceTests.test_race_where_the_check_misses_is_still_caught_and_rolled_back)
+Two requests pass the 'already used?' check at once: the unique column stops the second ... ok
+test_same_token_twice_for_stock_in_records_only_one (transactions.test_double_submit.DoubleSubmitServiceTests.test_same_token_twice_for_stock_in_records_only_one)
+ST-REL-01 / NFR-004 ... ok
+test_same_token_twice_for_stock_out_records_only_one (transactions.test_double_submit.DoubleSubmitServiceTests.test_same_token_twice_for_stock_out_records_only_one) ... ok
+test_token_cannot_be_reused_by_another_user_or_for_another_action (transactions.test_double_submit.DoubleSubmitServiceTests.test_token_cannot_be_reused_by_another_user_or_for_another_action) ... ok
+test_double_post_of_stock_in_creates_one_record (transactions.test_double_submit.DoubleSubmitViewTests.test_double_post_of_stock_in_creates_one_record) ... ok
+test_double_post_of_stock_out_creates_one_record (transactions.test_double_submit.DoubleSubmitViewTests.test_double_post_of_stock_out_creates_one_record) ... ok
+test_forms_carry_a_fresh_hidden_token_each_time (transactions.test_double_submit.DoubleSubmitViewTests.test_forms_carry_a_fresh_hidden_token_each_time) ... ok
+test_page_has_the_double_click_guard (transactions.test_double_submit.DoubleSubmitViewTests.test_page_has_the_double_click_guard) ... ok
+test_post_with_a_garbage_token_is_refused (transactions.test_double_submit.DoubleSubmitViewTests.test_post_with_a_garbage_token_is_refused) ... ok
+test_post_without_a_token_is_refused (transactions.test_double_submit.DoubleSubmitViewTests.test_post_without_a_token_is_refused) ... ok
+test_rejected_sale_does_not_use_up_the_token (transactions.test_double_submit.DoubleSubmitViewTests.test_rejected_sale_does_not_use_up_the_token) ... ok
+test_known_sequence (transactions.test_stock_logic.LedgerConsistencyTests.test_known_sequence) ... ok
+test_long_random_sequence_keeps_stock_equal_to_history (transactions.test_stock_logic.LedgerConsistencyTests.test_long_random_sequence_keeps_stock_equal_to_history) ... ok
+test_a_rejected_sale_does_not_change_the_alert_state (transactions.test_stock_logic.ThresholdTests.test_a_rejected_sale_does_not_change_the_alert_state) ... ok
+test_boundary_values (transactions.test_stock_logic.ThresholdTests.test_boundary_values) ... ok
+test_disabled_products_are_not_listed_as_low_stock (transactions.test_stock_logic.ThresholdTests.test_disabled_products_are_not_listed_as_low_stock) ... ok
+test_stock_in_clears_the_alert (transactions.test_stock_logic.ThresholdTests.test_stock_in_clears_the_alert) ... ok
+test_stock_out_that_crosses_the_threshold_raises_the_alert (transactions.test_stock_logic.ThresholdTests.test_stock_out_that_crosses_the_threshold_raises_the_alert) ... ok
+test_a_rejected_sale_keeps_the_user_on_the_same_screen (transactions.test_usability.FewScreensTests.test_a_rejected_sale_keeps_the_user_on_the_same_screen)
+An error must not add extra screens: the form is shown again with the message ... ok
+test_every_page_has_stock_links_in_the_menu (transactions.test_usability.FewScreensTests.test_every_page_has_stock_links_in_the_menu) ... ok
+test_forms_only_ask_for_what_is_needed (transactions.test_usability.FewScreensTests.test_forms_only_ask_for_what_is_needed) ... ok
+test_stock_in_takes_three_screens (transactions.test_usability.FewScreensTests.test_stock_in_takes_three_screens)
+ST-USE-01 / NFR-003 ... ok
+test_stock_out_takes_three_screens (transactions.test_usability.FewScreensTests.test_stock_out_takes_three_screens)
+ST-USE-01 / NFR-003 ... ok
+test_stock_out_of_a_deleted_product_is_rejected (transactions.tests.EdgeCaseCoverageTests.test_stock_out_of_a_deleted_product_is_rejected)
+A product that no longer exists cannot be used in a transaction ... ok
+test_transaction_string_shows_type_quantity_and_id (transactions.tests.EdgeCaseCoverageTests.test_transaction_string_shows_type_quantity_and_id)
+The readable form of a transaction names its type, quantity and ID ... ok
+test_unrelated_integrity_error_is_not_hidden (transactions.tests.EdgeCaseCoverageTests.test_unrelated_integrity_error_is_not_hidden)
+An IntegrityError that is not a duplicate submit is re-raised and nothing is saved ... ok
+test_stock_in_increases_stock_and_saves_transaction (transactions.tests.StockInServiceTests.test_stock_in_increases_stock_and_saves_transaction)
+IT-STOCK-01 / FR-010 ... ok
+test_stock_in_rejects_bad_quantities (transactions.tests.StockInServiceTests.test_stock_in_rejects_bad_quantities)
+SEC-003 (negative tests) ... ok
+test_stock_in_rejects_disabled_product_and_supplier (transactions.tests.StockInServiceTests.test_stock_in_rejects_disabled_product_and_supplier) ... ok
+test_stock_in_requires_supplier (transactions.tests.StockInServiceTests.test_stock_in_requires_supplier)
+FR-016 ... ok
+test_failure_after_stock_update_rolls_everything_back (transactions.tests.StockOutServiceTests.test_failure_after_stock_update_rolls_everything_back)
+Atomicity: stock and history can never diverge (SAD 4.4) ... ok
+test_reject_over_sale_leaves_stock_unchanged (transactions.tests.StockOutServiceTests.test_reject_over_sale_leaves_stock_unchanged)
+UT-STOCK-02 / FR-012: stock=5, sell 6 -> rejected, stock stays 5 ... ok
+test_selling_exactly_all_stock_is_allowed (transactions.tests.StockOutServiceTests.test_selling_exactly_all_stock_is_allowed) ... ok
+test_stock_out_decreases_stock_and_saves_transaction (transactions.tests.StockOutServiceTests.test_stock_out_decreases_stock_and_saves_transaction)
+IT-STOCK-02 / FR-011 ... ok
+test_stock_out_rejects_bad_quantities_and_disabled_product (transactions.tests.StockOutServiceTests.test_stock_out_rejects_bad_quantities_and_disabled_product) ... ok
+test_dropdowns_only_offer_active_products (transactions.tests.StockViewTests.test_dropdowns_only_offer_active_products) ... ok
+test_invalid_input_is_rejected_by_the_form (transactions.tests.StockViewTests.test_invalid_input_is_rejected_by_the_form)
+ST-SEC-03 ... ok
+test_over_sale_shows_clear_error_and_changes_nothing (transactions.tests.StockViewTests.test_over_sale_shows_clear_error_and_changes_nothing) ... ok
+test_pages_require_login (transactions.tests.StockViewTests.test_pages_require_login) ... ok
+test_staff_see_own_transactions_admin_sees_all (transactions.tests.StockViewTests.test_staff_see_own_transactions_admin_sees_all) ... ok
+test_stock_in_form_flow (transactions.tests.StockViewTests.test_stock_in_form_flow) ... ok
+test_stock_out_form_flow (transactions.tests.StockViewTests.test_stock_out_form_flow) ... ok
+test_transaction_list_type_filter (transactions.tests.StockViewTests.test_transaction_list_type_filter) ... ok
+test_unexpected_stock_rule_failure_is_shown_on_the_form (transactions.tests.StockViewTests.test_unexpected_stock_rule_failure_is_shown_on_the_form)
+If the service refuses (e.g. the product was disabled a moment ago) the user sees why, nothing is saved ... ok
+test_database_rejects_stock_in_without_supplier (transactions.tests.TransactionIdAndImmutabilityTests.test_database_rejects_stock_in_without_supplier) ... ok
+test_duplicate_transaction_id_is_blocked_by_database (transactions.tests.TransactionIdAndImmutabilityTests.test_duplicate_transaction_id_is_blocked_by_database) ... ok
+test_every_transaction_gets_a_unique_id (transactions.tests.TransactionIdAndImmutabilityTests.test_every_transaction_gets_a_unique_id)
+IT-STOCK-03 / FR-013 ... ok
+test_transactions_cannot_be_edited_or_deleted (transactions.tests.TransactionIdAndImmutabilityTests.test_transactions_cannot_be_edited_or_deleted)
+Audit history is immutable (SRS section 7) ... ok
+test_bad_quantities_are_rejected_by_both_calculations (transactions.test_stock_logic.PureCalculationTests.test_bad_quantities_are_rejected_by_both_calculations) ... ok
+test_calculations_never_change_their_inputs_or_go_negative (transactions.test_stock_logic.PureCalculationTests.test_calculations_never_change_their_inputs_or_go_negative) ... ok
+test_over_sale_message_names_the_stock_and_the_product (transactions.test_stock_logic.PureCalculationTests.test_over_sale_message_names_the_stock_and_the_product) ... ok
+test_selling_exactly_everything_is_allowed_one_more_is_not (transactions.test_stock_logic.PureCalculationTests.test_selling_exactly_everything_is_allowed_one_more_is_not) ... ok
+test_stock_after_in (transactions.test_stock_logic.PureCalculationTests.test_stock_after_in) ... ok
+test_stock_after_out (transactions.test_stock_logic.PureCalculationTests.test_stock_after_out) ... ok
+test_services_know_nothing_about_http (transactions.test_stock_logic.SeparationFromUITests.test_services_know_nothing_about_http) ... ok
+test_views_do_no_stock_arithmetic (transactions.test_stock_logic.SeparationFromUITests.test_views_do_no_stock_arithmetic) ... ok
+
+----------------------------------------------------------------------
+Ran 76 tests in 14.851s
+
+OK
+Destroying test database for alias 'default' ('test_esims')...
+ OK
+System check identified no issues (0 silenced).
