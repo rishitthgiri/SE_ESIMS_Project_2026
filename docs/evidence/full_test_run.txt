@@ -1,0 +1,29 @@
+Creating test database for alias 'default'...
+
+.......................................................Forbidden (Permission denied): /staff/
+Traceback (most recent call last):
+  File "C:\Users\Dell\Desktop\ESIMS\SE_ESIMS_Project_2026\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Dell\Desktop\ESIMS\SE_ESIMS_Project_2026\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Dell\Desktop\ESIMS\SE_ESIMS_Project_2026\venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\Desktop\ESIMS\SE_ESIMS_Project_2026\venv\Lib\site-packages\django\contrib\auth\mixins.py", line 73, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\Desktop\ESIMS\SE_ESIMS_Project_2026\venv\Lib\site-packages\django\contrib\auth\mixins.py", line 134, in dispatch
+    return self.handle_no_permission()
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Dell\Desktop\ESIMS\SE_ESIMS_Project_2026\venv\Lib\site-packages\django\contrib\auth\mixins.py", line 48, in handle_no_permission
+    raise PermissionDenied(self.get_permission_denied_message())
+django.core.exceptions.PermissionDenied
+...............................................................................................................................................................................................................................................................................................
+----------------------------------------------------------------------
+Ran 342 tests in 872.292s
+
+OK
+Destroying test database for alias 'default'...
+
+Found 342 test(s).
+System check identified no issues (0 silenced).
