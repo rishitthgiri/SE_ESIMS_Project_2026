@@ -1,0 +1,97 @@
+Name                                                Stmts   Miss Branch BrPart  Cover   Missing
+-----------------------------------------------------------------------------------------------
+accounts\__init__.py                                    0      0      0      0   100%
+accounts\admin.py                                      20      3      0      0    85%   23, 26, 29
+accounts\apps.py                                        6      0      0      0   100%
+accounts\backends.py                                   16      2      8      2    83%   14, 16
+accounts\forms.py                                      53      1     10      2    95%   70->72, 93
+accounts\management\__init__.py                         0      0      0      0   100%
+accounts\management\commands\__init__.py                0      0      0      0   100%
+accounts\management\commands\seed_demo_users.py        44      0     12      0   100%
+accounts\migrations\0001_initial.py                     8      0      0      0   100%
+accounts\migrations\0002_securityevent.py               6      0      0      0   100%
+accounts\migrations\__init__.py                         0      0      0      0   100%
+accounts\mixins.py                                      4      0      0      0   100%
+accounts\models.py                                     36      0      2      0   100%
+accounts\security.py                                   22      1      4      1    92%   28
+accounts\signals.py                                    14      0      2      1    94%   17->22
+accounts\test_authorization.py                         80      0     10      0   100%
+accounts\test_security_log.py                         186      0      6      0   100%
+accounts\test_seed_users.py                           109      0      6      0   100%
+accounts\test_session_timeout.py                       60      0      2      0   100%
+accounts\test_staff_management.py                     134      0      0      0   100%
+accounts\test_validation.py                           153      0     22      0   100%
+accounts\tests.py                                      83      0      0      0   100%
+accounts\testutils.py                                   9      0      0      0   100%
+accounts\urls.py                                        5      0      0      0   100%
+accounts\views.py                                      90      1      6      1    98%   54
+catalog\__init__.py                                     0      0      0      0   100%
+catalog\admin.py                                       12      0      0      0   100%
+catalog\apps.py                                         4      0      0      0   100%
+catalog\forms.py                                       59      3     24      5    90%   15->17, 52, 54->56, 63, 75
+catalog\management\__init__.py                          0      0      0      0   100%
+catalog\management\commands\__init__.py                 0      0      0      0   100%
+catalog\management\commands\measure_search.py          41     41      6      0     0%   2-60
+catalog\management\commands\seed_demo_products.py      31     31     10      0     0%   2-58
+catalog\migrations\0001_initial.py                      8      0      0      0   100%
+catalog\migrations\__init__.py                          0      0      0      0   100%
+catalog\models.py                                      36      0      0      0   100%
+catalog\selectors.py                                   16      0      6      0   100%
+catalog\services.py                                     7      0      2      0   100%
+catalog\tests\__init__.py                               0      0      0      0   100%
+catalog\tests\test_forms.py                            45      0      0      0   100%
+catalog\tests\test_models.py                           40      0      2      0   100%
+catalog\tests\test_selectors.py                        22      0      0      0   100%
+catalog\tests\test_views_categories.py                 38      0      0      0   100%
+catalog\tests\test_views_products.py                  458      0     16      0   100%
+catalog\urls.py                                         4      0      0      0   100%
+catalog\views.py                                       78      0     16      0   100%
+esims\__init__.py                                       0      0      0      0   100%
+esims\asgi.py                                           4      4      0      0     0%   10-16
+esims\health.py                                         9      0      0      0   100%
+esims\settings.py                                      44      1      4      2    94%   91, 203->exit
+esims\test_health.py                                   14      0      0      0   100%
+esims\urls.py                                           5      0      0      0   100%
+esims\validation.py                                    55      2     18      0    97%   92-93
+esims\wsgi.py                                           4      4      0      0     0%   10-16
+reports\__init__.py                                     0      0      0      0   100%
+reports\admin.py                                        1      0      0      0   100%
+reports\alerts.py                                       6      0      0      0   100%
+reports\apps.py                                         4      0      0      0   100%
+reports\forms.py                                       19      0      4      0   100%
+reports\migrations\__init__.py                          0      0      0      0   100%
+reports\models.py                                       1      0      0      0   100%
+reports\services.py                                    28      0      4      0   100%
+reports\test_reports.py                               200      0     10      0   100%
+reports\test_sec005.py                                 58      1     22      1    98%   29
+reports\tests.py                                       57      0      2      0   100%
+reports\urls.py                                         4      0      0      0   100%
+reports\views.py                                       58      0     14      0   100%
+suppliers\__init__.py                                   0      0      0      0   100%
+suppliers\admin.py                                      7      0      0      0   100%
+suppliers\apps.py                                       4      0      0      0   100%
+suppliers\forms.py                                     17      1      6      2    87%   20, 22->24
+suppliers\migrations\0001_initial.py                    6      0      0      0   100%
+suppliers\migrations\__init__.py                        0      0      0      0   100%
+suppliers\models.py                                    17      0      0      0   100%
+suppliers\tests.py                                    100      0      2      0   100%
+suppliers\urls.py                                       4      0      0      0   100%
+suppliers\views.py                                     54      1      8      1    97%   52
+transactions\__init__.py                                0      0      0      0   100%
+transactions\admin.py                                  13      0      0      0   100%
+transactions\apps.py                                    4      0      0      0   100%
+transactions\forms.py                                  43      0      2      0   100%
+transactions\migrations\0001_initial.py                 9      0      0      0   100%
+transactions\migrations\__init__.py                     0      0      0      0   100%
+transactions\models.py                                 27      1      2      0    97%   56
+transactions\services.py                               85      3     24      1    96%   106-107, 124
+transactions\test_audit.py                            123      0      8      0   100%
+transactions\test_double_submit.py                    117      0      4      0   100%
+transactions\test_stock_logic.py                      109      0     20      0   100%
+transactions\test_usability.py                         50      0      2      0   100%
+transactions\tests.py                                 164      0     10      0   100%
+transactions\testutils.py                              18      0      0      0   100%
+transactions\urls.py                                    4      0      0      0   100%
+transactions\views.py                                  98      0     22      0   100%
+-----------------------------------------------------------------------------------------------
+TOTAL                                                3681    101    360     19    97%
