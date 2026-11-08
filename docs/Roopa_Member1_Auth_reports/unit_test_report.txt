@@ -1,0 +1,204 @@
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+Found 144 test(s).
+Operations to perform:
+  Synchronize unmigrated apps: messages, staticfiles
+  Apply all migrations: accounts, admin, auth, catalog, contenttypes, sessions, suppliers, transactions
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0001_initial... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying accounts.0001_initial... OK
+  Applying accounts.0002_securityevent... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying suppliers.0001_initial... OK
+  Applying catalog.0001_initial... OK
+  Applying sessions.0001_initial... OK
+  Applying transactions.0001_initial...test_403_page_does_not_leak_admin_content (accounts.test_authorization.AdminOnlyUrlsTests.test_403_page_does_not_leak_admin_content) ... ok
+test_administrator_is_allowed_on_every_admin_only_url (accounts.test_authorization.AdminOnlyUrlsTests.test_administrator_is_allowed_on_every_admin_only_url) ... ok
+test_administrator_role_without_superuser_still_blocked_from_django_admin_site (accounts.test_authorization.AdminOnlyUrlsTests.test_administrator_role_without_superuser_still_blocked_from_django_admin_site) ... ok
+test_anonymous_is_redirected_to_login_on_every_admin_only_url (accounts.test_authorization.AdminOnlyUrlsTests.test_anonymous_is_redirected_to_login_on_every_admin_only_url) ... ok
+test_django_admin_site_is_closed_to_staff (accounts.test_authorization.AdminOnlyUrlsTests.test_django_admin_site_is_closed_to_staff) ... ok
+test_every_non_public_accounts_url_is_listed_as_admin_only (accounts.test_authorization.AdminOnlyUrlsTests.test_every_non_public_accounts_url_is_listed_as_admin_only)
+Guard: adding a new accounts URL forces you to decide (and test) whether it is admin-only. ... ok
+test_staff_cannot_create_accounts_by_posting_directly (accounts.test_authorization.AdminOnlyUrlsTests.test_staff_cannot_create_accounts_by_posting_directly) ... ok
+test_staff_cannot_deactivate_or_edit_other_accounts (accounts.test_authorization.AdminOnlyUrlsTests.test_staff_cannot_deactivate_or_edit_other_accounts) ... ok
+test_staff_cannot_promote_themselves_to_administrator (accounts.test_authorization.AdminOnlyUrlsTests.test_staff_cannot_promote_themselves_to_administrator) ... ok
+test_staff_gets_403_on_every_admin_only_url (accounts.test_authorization.AdminOnlyUrlsTests.test_staff_gets_403_on_every_admin_only_url) ... ok
+test_staff_can_open_dashboard (accounts.test_authorization.SharedPagesStayOpenToStaffTests.test_staff_can_open_dashboard) ... ok
+test_staff_can_open_transactions (accounts.test_authorization.SharedPagesStayOpenToStaffTests.test_staff_can_open_transactions) ... ok
+test_staff_dashboard_hides_admin_cards (accounts.test_authorization.SharedPagesStayOpenToStaffTests.test_staff_dashboard_hides_admin_cards) ... ok
+test_blank_form_submit_is_not_logged (accounts.test_security_log.FailedLoginLoggingTests.test_blank_form_submit_is_not_logged) ... ok
+test_deactivated_account_login_attempt_is_logged (accounts.test_security_log.FailedLoginLoggingTests.test_deactivated_account_login_attempt_is_logged) ... ok
+test_event_is_also_written_to_the_python_logger (accounts.test_security_log.FailedLoginLoggingTests.test_event_is_also_written_to_the_python_logger) ... ok
+test_every_failed_attempt_gets_its_own_row (accounts.test_security_log.FailedLoginLoggingTests.test_every_failed_attempt_gets_its_own_row) ... ok
+test_hostile_username_is_sanitized_before_it_is_stored (accounts.test_security_log.FailedLoginLoggingTests.test_hostile_username_is_sanitized_before_it_is_stored) ... ok
+test_logging_failure_does_not_break_the_login_page (accounts.test_security_log.FailedLoginLoggingTests.test_logging_failure_does_not_break_the_login_page) ... ok
+test_login_by_email_is_matched_to_the_user (accounts.test_security_log.FailedLoginLoggingTests.test_login_by_email_is_matched_to_the_user) ... ok
+test_password_is_never_stored (accounts.test_security_log.FailedLoginLoggingTests.test_password_is_never_stored) ... ok
+test_successful_login_is_not_logged_as_a_failure (accounts.test_security_log.FailedLoginLoggingTests.test_successful_login_is_not_logged_as_a_failure) ... ok
+test_unknown_username_is_logged_without_a_user (accounts.test_security_log.FailedLoginLoggingTests.test_unknown_username_is_logged_without_a_user) ... ok
+test_username_that_passes_the_form_but_exceeds_the_column_is_truncated (accounts.test_security_log.FailedLoginLoggingTests.test_username_that_passes_the_form_but_exceeds_the_column_is_truncated) ... ok
+test_very_long_username_is_logged_and_truncated (accounts.test_security_log.FailedLoginLoggingTests.test_very_long_username_is_logged_and_truncated) ... ok
+test_wrong_password_is_logged_exactly_once (accounts.test_security_log.FailedLoginLoggingTests.test_wrong_password_is_logged_exactly_once) ... ok
+test_wrong_password_is_logged_with_user_ip_and_timestamp (accounts.test_security_log.FailedLoginLoggingTests.test_wrong_password_is_logged_with_user_ip_and_timestamp) ... ok
+test_event_survives_user_deletion (accounts.test_security_log.SecurityEventModelTests.test_event_survives_user_deletion) ... ok
+test_events_cannot_be_edited (accounts.test_security_log.SecurityEventModelTests.test_events_cannot_be_edited) ... ok
+test_str (accounts.test_security_log.SecurityEventModelTests.test_str) ... ok
+test_admin_sees_events_with_user_and_timestamp (accounts.test_security_log.SecurityLogPageTests.test_admin_sees_events_with_user_and_timestamp) ... ok
+test_attacker_text_is_escaped_on_the_page (accounts.test_security_log.SecurityLogPageTests.test_attacker_text_is_escaped_on_the_page) ... ok
+test_dashboard_card_visible_to_admin (accounts.test_security_log.SecurityLogPageTests.test_dashboard_card_visible_to_admin) ... ok
+test_filter_by_type (accounts.test_security_log.SecurityLogPageTests.test_filter_by_type) ... ok
+test_newest_event_first (accounts.test_security_log.SecurityLogPageTests.test_newest_event_first) ... ok
+test_pagination (accounts.test_security_log.SecurityLogPageTests.test_pagination) ... ok
+test_staff_cannot_read_the_log (accounts.test_security_log.SecurityLogPageTests.test_staff_cannot_read_the_log) ... ok
+test_unknown_filter_value_is_ignored (accounts.test_security_log.SecurityLogPageTests.test_unknown_filter_value_is_ignored) ... ok
+test_administrator_access_is_not_logged (accounts.test_security_log.UnauthorizedAccessLoggingTests.test_administrator_access_is_not_logged) ... ok
+test_anonymous_redirect_to_login_is_routine_and_not_logged (accounts.test_security_log.UnauthorizedAccessLoggingTests.test_anonymous_redirect_to_login_is_routine_and_not_logged) ... ok
+test_blocked_post_is_logged_with_its_method (accounts.test_security_log.UnauthorizedAccessLoggingTests.test_blocked_post_is_logged_with_its_method) ... ok
+test_denied_event_is_written_to_python_logger (accounts.test_security_log.UnauthorizedAccessLoggingTests.test_denied_event_is_written_to_python_logger) ... ok
+test_each_blocked_admin_url_is_logged (accounts.test_security_log.UnauthorizedAccessLoggingTests.test_each_blocked_admin_url_is_logged) ... ok
+test_normal_staff_pages_are_not_logged (accounts.test_security_log.UnauthorizedAccessLoggingTests.test_normal_staff_pages_are_not_logged) ... ok
+test_staff_opening_admin_page_is_logged (accounts.test_security_log.UnauthorizedAccessLoggingTests.test_staff_opening_admin_page_is_logged) ... ok
+test_creates_every_kind_of_user (accounts.test_seed_users.SeedDemoUsersTests.test_creates_every_kind_of_user) ... ok
+test_each_seeded_user_can_log_in_except_the_deactivated_one (accounts.test_seed_users.SeedDemoUsersTests.test_each_seeded_user_can_log_in_except_the_deactivated_one) ... ok
+test_existing_user_with_same_email_is_not_overwritten (accounts.test_seed_users.SeedDemoUsersTests.test_existing_user_with_same_email_is_not_overwritten) ... ok
+test_login_by_email_works_for_seeded_users (accounts.test_seed_users.SeedDemoUsersTests.test_login_by_email_works_for_seeded_users) ... ok
+test_output_lists_usernames_and_passwords (accounts.test_seed_users.SeedDemoUsersTests.test_output_lists_usernames_and_passwords) ... ok
+test_password_override_from_environment (accounts.test_seed_users.SeedDemoUsersTests.test_password_override_from_environment) ... ok
+test_passwords_are_stored_hashed (accounts.test_seed_users.SeedDemoUsersTests.test_passwords_are_stored_hashed) ... ok
+test_rerun_does_not_touch_existing_users (accounts.test_seed_users.SeedDemoUsersTests.test_rerun_does_not_touch_existing_users) ... ok
+test_reset_does_not_create_duplicates (accounts.test_seed_users.SeedDemoUsersTests.test_reset_does_not_create_duplicates) ... ok
+test_reset_restores_demo_state (accounts.test_seed_users.SeedDemoUsersTests.test_reset_restores_demo_state) ... ok
+test_roles_behave_correctly_in_the_app (accounts.test_seed_users.SeedDemoUsersTests.test_roles_behave_correctly_in_the_app) ... Forbidden (Permission denied): /staff/
+Traceback (most recent call last):
+  File "C:\Users\roopa\Desktop\clgcoding\SE_ESIMS_Project_2026\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roopa\Desktop\clgcoding\SE_ESIMS_Project_2026\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roopa\Desktop\clgcoding\SE_ESIMS_Project_2026\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roopa\Desktop\clgcoding\SE_ESIMS_Project_2026\.venv\Lib\site-packages\django\contrib\auth\mixins.py", line 73, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roopa\Desktop\clgcoding\SE_ESIMS_Project_2026\.venv\Lib\site-packages\django\contrib\auth\mixins.py", line 134, in dispatch
+    return self.handle_no_permission()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roopa\Desktop\clgcoding\SE_ESIMS_Project_2026\.venv\Lib\site-packages\django\contrib\auth\mixins.py", line 48, in handle_no_permission
+    raise PermissionDenied(self.get_permission_denied_message())
+django.core.exceptions.PermissionDenied
+ok
+test_safe_to_run_twice (accounts.test_seed_users.SeedDemoUsersTests.test_safe_to_run_twice) ... ok
+test_force_overrides_the_debug_guard (accounts.test_seed_users.SeedSafetyTests.test_force_overrides_the_debug_guard) ... ok
+test_refuses_to_run_when_debug_is_off (accounts.test_seed_users.SeedSafetyTests.test_refuses_to_run_when_debug_is_off) ... ok
+test_active_session_works (accounts.test_session_timeout.SessionTimeoutBehaviourTests.test_active_session_works) ... ok
+test_activity_extends_the_session (accounts.test_session_timeout.SessionTimeoutBehaviourTests.test_activity_extends_the_session) ... ok
+test_expired_session_cannot_reach_other_pages (accounts.test_session_timeout.SessionTimeoutBehaviourTests.test_expired_session_cannot_reach_other_pages) ... ok
+test_idle_session_is_logged_out_and_redirected_to_login (accounts.test_session_timeout.SessionTimeoutBehaviourTests.test_idle_session_is_logged_out_and_redirected_to_login) ... ok
+test_user_can_log_in_again_after_timeout (accounts.test_session_timeout.SessionTimeoutBehaviourTests.test_user_can_log_in_again_after_timeout) ... ok
+test_int_env_default_when_unset (accounts.test_session_timeout.SessionTimeoutConfigTests.test_int_env_default_when_unset) ... ok
+test_int_env_falls_back_on_bad_values (accounts.test_session_timeout.SessionTimeoutConfigTests.test_int_env_falls_back_on_bad_values) ... ok
+test_int_env_reads_value (accounts.test_session_timeout.SessionTimeoutConfigTests.test_int_env_reads_value) ... ok
+test_session_cookie_is_httponly (accounts.test_session_timeout.SessionTimeoutConfigTests.test_session_cookie_is_httponly) ... ok
+test_timeout_setting_exists_and_drives_cookie_age (accounts.test_session_timeout.SessionTimeoutConfigTests.test_timeout_setting_exists_and_drives_cookie_age) ... ok
+test_timer_resets_on_every_request (accounts.test_session_timeout.SessionTimeoutConfigTests.test_timer_resets_on_every_request) ... ok
+test_admin_can_reactivate_staff (accounts.test_staff_management.StaffManagementTests.test_admin_can_reactivate_staff) ... ok
+test_admin_creates_staff (accounts.test_staff_management.StaffManagementTests.test_admin_creates_staff) ... ok
+test_admin_deactivates_staff (accounts.test_staff_management.StaffManagementTests.test_admin_deactivates_staff) ... ok
+test_admin_edits_staff (accounts.test_staff_management.StaffManagementTests.test_admin_edits_staff) ... ok
+test_cannot_deactivate_administrator_through_staff_endpoint (accounts.test_staff_management.StaffManagementTests.test_cannot_deactivate_administrator_through_staff_endpoint) ... ok
+test_cannot_edit_administrator_through_staff_endpoint (accounts.test_staff_management.StaffManagementTests.test_cannot_edit_administrator_through_staff_endpoint) ... ok
+test_create_form_cannot_make_an_administrator (accounts.test_staff_management.StaffManagementTests.test_create_form_cannot_make_an_administrator) ... ok
+test_create_rejects_duplicate_email (accounts.test_staff_management.StaffManagementTests.test_create_rejects_duplicate_email) ... ok
+test_create_rejects_duplicate_email_ignoring_case (accounts.test_staff_management.StaffManagementTests.test_create_rejects_duplicate_email_ignoring_case) ... ok
+test_create_rejects_duplicate_username_ignoring_case (accounts.test_staff_management.StaffManagementTests.test_create_rejects_duplicate_username_ignoring_case) ... ok
+test_create_rejects_password_mismatch (accounts.test_staff_management.StaffManagementTests.test_create_rejects_password_mismatch) ... ok
+test_create_rejects_weak_password (accounts.test_staff_management.StaffManagementTests.test_create_rejects_weak_password) ... ok
+test_created_staff_can_log_in (accounts.test_staff_management.StaffManagementTests.test_created_staff_can_log_in) ... ok
+test_deactivated_user_cannot_log_in (accounts.test_staff_management.StaffManagementTests.test_deactivated_user_cannot_log_in) ... ok
+test_deactivated_user_cannot_log_in_with_email_either (accounts.test_staff_management.StaffManagementTests.test_deactivated_user_cannot_log_in_with_email_either) ... ok
+test_deactivating_kicks_out_an_already_logged_in_user (accounts.test_staff_management.StaffManagementTests.test_deactivating_kicks_out_an_already_logged_in_user) ... ok
+test_edit_allows_keeping_own_email (accounts.test_staff_management.StaffManagementTests.test_edit_allows_keeping_own_email) ... ok
+test_edit_keeps_password_and_role (accounts.test_staff_management.StaffManagementTests.test_edit_keeps_password_and_role) ... ok
+test_edit_rejects_email_used_by_someone_else (accounts.test_staff_management.StaffManagementTests.test_edit_rejects_email_used_by_someone_else) ... ok
+test_email_is_stored_lowercase (accounts.test_staff_management.StaffManagementTests.test_email_is_stored_lowercase) ... ok
+test_list_shows_only_staff_accounts (accounts.test_staff_management.StaffManagementTests.test_list_shows_only_staff_accounts) ... ok
+test_toggle_requires_post (accounts.test_staff_management.StaffManagementTests.test_toggle_requires_post) ... ok
+test_empty_fields_rejected (accounts.test_validation.LoginInputTests.test_empty_fields_rejected) ... ok
+test_sql_injection_style_input_is_just_an_invalid_login (accounts.test_validation.LoginInputTests.test_sql_injection_style_input_is_just_an_invalid_login) ... ok
+test_very_long_username_is_rejected_without_crashing (accounts.test_validation.LoginInputTests.test_very_long_username_is_rejected_without_crashing) ... ok
+test_bad_email_rejected (accounts.test_validation.StaffFormValidationTests.test_bad_email_rejected) ... ok
+test_bad_username_rejected (accounts.test_validation.StaffFormValidationTests.test_bad_username_rejected) ... ok
+test_edit_form_rejects_script_in_name (accounts.test_validation.StaffFormValidationTests.test_edit_form_rejects_script_in_name) ... ok
+test_harmless_markup_in_name_is_stripped_not_stored (accounts.test_validation.StaffFormValidationTests.test_harmless_markup_in_name_is_stripped_not_stored) ... ok
+test_name_too_long_rejected (accounts.test_validation.StaffFormValidationTests.test_name_too_long_rejected) ... ok
+test_nul_byte_removed (accounts.test_validation.StaffFormValidationTests.test_nul_byte_removed) ... ok
+test_script_in_name_is_rejected (accounts.test_validation.StaffFormValidationTests.test_script_in_name_is_rejected) ... ok
+test_valid_form (accounts.test_validation.StaffFormValidationTests.test_valid_form) ... ok
+test_invalid_quantity_never_changes_stock (accounts.test_validation.StockQuantityValidationTests.test_invalid_quantity_never_changes_stock) ... ok
+test_stock_in_rejects_invalid_quantities (accounts.test_validation.StockQuantityValidationTests.test_stock_in_rejects_invalid_quantities) ... ok
+test_stock_out_rejects_invalid_quantities (accounts.test_validation.StockQuantityValidationTests.test_stock_out_rejects_invalid_quantities) ... ok
+test_unknown_or_malformed_product_id_rejected (accounts.test_validation.StockQuantityValidationTests.test_unknown_or_malformed_product_id_rejected) ... ok
+test_valid_quantities_are_accepted (accounts.test_validation.StockQuantityValidationTests.test_valid_quantities_are_accepted) ... ok
+test_dashboard_requires_login (accounts.tests.LoginTests.test_dashboard_requires_login) ... ok
+test_login_page_loads (accounts.tests.LoginTests.test_login_page_loads) ... ok
+test_login_unknown_user (accounts.tests.LoginTests.test_login_unknown_user) ... ok
+test_login_with_email (accounts.tests.LoginTests.test_login_with_email) ... ok
+test_login_with_username (accounts.tests.LoginTests.test_login_with_username) ... ok
+test_login_wrong_password_shows_error (accounts.tests.LoginTests.test_login_wrong_password_shows_error) ... ok
+test_logout (accounts.tests.LoginTests.test_logout) ... ok
+test_check_password_works (accounts.tests.PasswordHashingTests.test_check_password_works) ... ok
+test_password_is_hashed (accounts.tests.PasswordHashingTests.test_password_is_hashed) ... ok
+test_plaintext_not_in_password_field (accounts.tests.PasswordHashingTests.test_plaintext_not_in_password_field) ... ok
+test_admin_can_open_staff_list (accounts.tests.RoleTests.test_admin_can_open_staff_list) ... ok
+test_anonymous_redirected_from_staff_list (accounts.tests.RoleTests.test_anonymous_redirected_from_staff_list) ... ok
+test_default_role_is_staff (accounts.tests.RoleTests.test_default_role_is_staff) ... ok
+test_is_admin_role_property (accounts.tests.RoleTests.test_is_admin_role_property) ... ok
+test_staff_gets_403_on_staff_list (accounts.tests.RoleTests.test_staff_gets_403_on_staff_list) ... ok
+test_staff_nav_hides_manage_staff_link (accounts.tests.RoleTests.test_staff_nav_hides_manage_staff_link) ... ok
+test_two_roles_exist (accounts.tests.RoleTests.test_two_roles_exist) ... ok
+test_create_user (accounts.tests.UserModelTests.test_create_user) ... ok
+test_email_is_unique (accounts.tests.UserModelTests.test_email_is_unique) ... ok
+test_invalid_names (accounts.test_validation.PersonNameTests.test_invalid_names) ... ok
+test_valid_names (accounts.test_validation.PersonNameTests.test_valid_names) ... ok
+test_control_characters_and_nul_removed (accounts.test_validation.SanitizeTextTests.test_control_characters_and_nul_removed) ... ok
+test_log_injection_newlines_removed_in_single_line_mode (accounts.test_validation.SanitizeTextTests.test_log_injection_newlines_removed_in_single_line_mode) ... ok
+test_multiline_mode_keeps_line_breaks (accounts.test_validation.SanitizeTextTests.test_multiline_mode_keeps_line_breaks) ... ok
+test_none_becomes_empty (accounts.test_validation.SanitizeTextTests.test_none_becomes_empty) ... ok
+test_tags_are_stripped (accounts.test_validation.SanitizeTextTests.test_tags_are_stripped) ... ok
+test_unicode_is_normalized (accounts.test_validation.SanitizeTextTests.test_unicode_is_normalized) ... ok
+test_whitespace_collapsed_and_trimmed (accounts.test_validation.SanitizeTextTests.test_whitespace_collapsed_and_trimmed) ... ok
+test_max_length_enforced_after_sanitizing (accounts.test_validation.SanitizedCharFieldTests.test_max_length_enforced_after_sanitizing) ... ok
+test_required_empty_after_sanitizing_is_rejected (accounts.test_validation.SanitizedCharFieldTests.test_required_empty_after_sanitizing_is_rejected) ... ok
+test_sanitizes_before_validating (accounts.test_validation.SanitizedCharFieldTests.test_sanitizes_before_validating) ... ok
+test_accepts_money_values (accounts.test_validation.StrictDecimalFieldTests.test_accepts_money_values) ... ok
+test_rejects_invalid_values (accounts.test_validation.StrictDecimalFieldTests.test_rejects_invalid_values) ... ok
+test_accepts_plain_digits (accounts.test_validation.StrictIntegerFieldTests.test_accepts_plain_digits) ... ok
+test_rejects_bool (accounts.test_validation.StrictIntegerFieldTests.test_rejects_bool) ... ok
+test_rejects_invalid_values (accounts.test_validation.StrictIntegerFieldTests.test_rejects_invalid_values) ... ok
+
+----------------------------------------------------------------------
+Ran 144 tests in 246.630s
+
+OK
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+ OK
+System check identified no issues (0 silenced).
