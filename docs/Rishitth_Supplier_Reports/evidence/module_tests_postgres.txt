@@ -1,0 +1,105 @@
+Found 66 test(s).
+Creating test database for alias 'default' ('test_esims')...
+Operations to perform:
+  Synchronize unmigrated apps: messages, staticfiles
+  Apply all migrations: accounts, admin, auth, catalog, contenttypes, sessions, suppliers, transactions
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0001_initial... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying accounts.0001_initial... OK
+  Applying accounts.0002_securityevent... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying suppliers.0001_initial... OK
+  Applying catalog.0001_initial... OK
+  Applying sessions.0001_initial... OK
+  Applying transactions.0001_initial... OK
+System check identified no issues (0 silenced).
+test_disabling_twice_is_harmless (suppliers.test_detail_and_edit.SupplierEditAndDetailTests.test_disabling_twice_is_harmless) ... ok
+test_edit_page_shows_current_values (suppliers.test_detail_and_edit.SupplierEditAndDetailTests.test_edit_page_shows_current_values) ... ok
+test_invalid_edit_keeps_old_values (suppliers.test_detail_and_edit.SupplierEditAndDetailTests.test_invalid_edit_keeps_old_values) ... ok
+test_string_form_is_the_name (suppliers.test_detail_and_edit.SupplierEditAndDetailTests.test_string_form_is_the_name) ... ok
+test_supplier_page_is_admin_only (suppliers.test_detail_and_edit.SupplierEditAndDetailTests.test_supplier_page_is_admin_only) ... ok
+test_unknown_supplier_gives_404 (suppliers.test_detail_and_edit.SupplierEditAndDetailTests.test_unknown_supplier_gives_404) ... ok
+test_admin_can_add_supplier (suppliers.tests.SupplierCrudTests.test_admin_can_add_supplier) ... ok
+test_admin_can_edit_supplier (suppliers.tests.SupplierCrudTests.test_admin_can_edit_supplier) ... ok
+test_blank_name_rejected (suppliers.tests.SupplierCrudTests.test_blank_name_rejected) ... ok
+test_disable_is_soft_delete (suppliers.tests.SupplierCrudTests.test_disable_is_soft_delete) ... ok
+test_disable_requires_post (suppliers.tests.SupplierCrudTests.test_disable_requires_post) ... ok
+test_duplicate_name_rejected_case_insensitive (suppliers.tests.SupplierCrudTests.test_duplicate_name_rejected_case_insensitive) ... ok
+test_edit_keeping_same_name_is_allowed (suppliers.tests.SupplierCrudTests.test_edit_keeping_same_name_is_allowed) ... ok
+test_list_filter_by_status (suppliers.tests.SupplierCrudTests.test_list_filter_by_status) ... ok
+test_anonymous_redirected_to_login (suppliers.tests.SupplierPermissionTests.test_anonymous_redirected_to_login) ... ok
+test_staff_get_403_everywhere (suppliers.tests.SupplierPermissionTests.test_staff_get_403_everywhere) ... ok
+test_disabled_supplier_cannot_be_used_for_stock_in (suppliers.tests.SupplierStockLinkTests.test_disabled_supplier_cannot_be_used_for_stock_in) ... ok
+test_disabled_supplier_history_is_kept (suppliers.tests.SupplierStockLinkTests.test_disabled_supplier_history_is_kept) ... ok
+test_stock_in_is_linked_to_supplier_and_shown_on_supplier_page (suppliers.tests.SupplierStockLinkTests.test_stock_in_is_linked_to_supplier_and_shown_on_supplier_page) ... ok
+test_stock_out_not_listed_on_supplier_page (suppliers.tests.SupplierStockLinkTests.test_stock_out_not_listed_on_supplier_page) ... ok
+test_supplier_shown_on_transaction_list (suppliers.tests.SupplierStockLinkTests.test_supplier_shown_on_transaction_list) ... ok
+test_alert_appears_only_when_strictly_below_threshold (reports.test_alert_flow.LowStockFlowTests.test_alert_appears_only_when_strictly_below_threshold) ... ok
+test_both_roles_see_the_alert_on_page_and_dashboard (reports.test_alert_flow.LowStockFlowTests.test_both_roles_see_the_alert_on_page_and_dashboard) ... ok
+test_disabling_the_product_removes_the_alert (reports.test_alert_flow.LowStockFlowTests.test_disabling_the_product_removes_the_alert) ... ok
+test_restock_clears_the_alert (reports.test_alert_flow.LowStockFlowTests.test_restock_clears_the_alert) ... ok
+test_price_change_changes_old_sale_amounts (reports.test_alert_flow.ReportAmountRuleTests.test_price_change_changes_old_sale_amounts) ... ok
+test_export_respects_date_range (reports.test_reports.CsvExportTests.test_export_respects_date_range) ... ok
+test_formula_injection_is_neutralised (reports.test_reports.CsvExportTests.test_formula_injection_is_neutralised) ... ok
+test_sales_csv (reports.test_reports.CsvExportTests.test_sales_csv) ... ok
+test_stock_csv (reports.test_reports.CsvExportTests.test_stock_csv) ... ok
+test_admin_gets_200 (reports.test_reports.ReportAccessTests.test_admin_gets_200) ... ok
+test_anonymous_redirected_to_login (reports.test_reports.ReportAccessTests.test_anonymous_redirected_to_login) ... ok
+test_staff_cannot_export_csv (reports.test_reports.ReportAccessTests.test_staff_cannot_export_csv) ... ok
+test_staff_gets_403 (reports.test_reports.ReportAccessTests.test_staff_gets_403) ... ok
+test_amount_is_quantity_times_price_and_totals_add_up (reports.test_reports.SalesReportTests.test_amount_is_quantity_times_price_and_totals_add_up) ... ok
+test_default_range_is_last_30_days (reports.test_reports.SalesReportTests.test_default_range_is_last_30_days) ... ok
+test_empty_database_still_renders (reports.test_reports.SalesReportTests.test_empty_database_still_renders) ... ok
+test_garbage_date_is_rejected (reports.test_reports.SalesReportTests.test_garbage_date_is_rejected) ... ok
+test_sales_table_has_required_columns (reports.test_reports.SalesReportTests.test_sales_table_has_required_columns) ... ok
+test_start_after_end_is_rejected (reports.test_reports.SalesReportTests.test_start_after_end_is_rejected) ... ok
+test_start_and_end_dates_are_inclusive (reports.test_reports.SalesReportTests.test_start_and_end_dates_are_inclusive) ... ok
+test_stock_in_is_not_a_sale (reports.test_reports.SalesReportTests.test_stock_in_is_not_a_sale) ... ok
+test_stock_section_value_and_movement (reports.test_reports.SalesReportTests.test_stock_section_value_and_movement) ... ok
+test_disabled_products_still_appear_in_history (reports.test_reports.ServiceTests.test_disabled_products_still_appear_in_history) ... ok
+test_bad_range_is_rejected (reports.test_reports.TopSellingTests.test_bad_range_is_rejected) ... ok
+test_no_dates_means_all_time_and_dates_filter (reports.test_reports.TopSellingTests.test_no_dates_means_all_time_and_dates_filter) ... ok
+test_only_top_ten (reports.test_reports.TopSellingTests.test_only_top_ten) ... ok
+test_ranked_by_units_sold (reports.test_reports.TopSellingTests.test_ranked_by_units_sold) ... ok
+test_stock_in_does_not_count (reports.test_reports.TopSellingTests.test_stock_in_does_not_count) ... ok
+test_ties_broken_by_name (reports.test_reports.TopSellingTests.test_ties_broken_by_name) ... ok
+test_crawler_actually_finds_the_app_urls (reports.test_sec005.LoggedOutAccessTests.test_crawler_actually_finds_the_app_urls) ... ok
+test_django_admin_requires_login_too (reports.test_sec005.LoggedOutAccessTests.test_django_admin_requires_login_too) ... ok
+test_every_page_redirects_logged_out_visitors_to_login (reports.test_sec005.LoggedOutAccessTests.test_every_page_redirects_logged_out_visitors_to_login) ... ok
+test_no_sensitive_data_in_any_response (reports.test_sec005.LoggedOutAccessTests.test_no_sensitive_data_in_any_response) ... ok
+test_above_threshold_is_not_low (reports.tests.LowStockRuleTests.test_above_threshold_is_not_low) ... ok
+test_equal_to_threshold_is_not_low (reports.tests.LowStockRuleTests.test_equal_to_threshold_is_not_low) ... ok
+test_most_urgent_first (reports.tests.LowStockRuleTests.test_most_urgent_first) ... ok
+test_queryset_matches_rule_and_skips_disabled (reports.tests.LowStockRuleTests.test_queryset_matches_rule_and_skips_disabled) ... ok
+test_strictly_below_threshold_is_low (reports.tests.LowStockRuleTests.test_strictly_below_threshold_is_low) ... ok
+test_zero_threshold_never_low (reports.tests.LowStockRuleTests.test_zero_threshold_never_low) ... ok
+test_alert_clears_after_restock (reports.tests.LowStockViewTests.test_alert_clears_after_restock) ... ok
+test_anonymous_redirected (reports.tests.LowStockViewTests.test_anonymous_redirected) ... ok
+test_empty_state_message (reports.tests.LowStockViewTests.test_empty_state_message) ... ok
+test_staff_and_admin_can_view_report_and_dashboard (reports.tests.LowStockViewTests.test_staff_and_admin_can_view_report_and_dashboard) ... ok
+test_database_down_gives_503 (esims.test_health.HealthTests.test_database_down_gives_503) ... ok
+test_ok_without_login (esims.test_health.HealthTests.test_ok_without_login) ... ok
+
+----------------------------------------------------------------------
+Ran 66 tests in 6.125s
+
+OK
+Destroying test database for alias 'default' ('test_esims')...

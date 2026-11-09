@@ -1,0 +1,11 @@
+{
+  "before_outage": [
+    200
+  ],
+  "during_outage_codes": [
+    503
+  ],
+  "down_checks": 12,
+  "recovered_after_seconds": 2.2,
+  "checks_total": 38
+}

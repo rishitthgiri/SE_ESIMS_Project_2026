@@ -1,0 +1,80 @@
+[2026-11-09 04:40:32 +0000] [3291] [INFO] Starting gunicorn 26.2.0
+[2026-11-09 04:40:32 +0000] [3291] [INFO] Listening at: http://127.0.0.1:8765 (3291)
+[2026-11-09 04:40:32 +0000] [3291] [INFO] Using worker: sync
+[2026-11-09 04:40:32 +0000] [3293] [INFO] Booting worker with pid: 3293
+[2026-11-09 04:40:32 +0000] [3294] [INFO] Booting worker with pid: 3294
+[2026-11-09 04:40:32 +0000] [3295] [INFO] Booting worker with pid: 3295
+[2026-11-09 04:40:32 +0000] [3291] [INFO] Control socket listening at /root/.gunicorn/gunicorn.ctl
+Method Not Allowed (GET): /suppliers/28d0cec1-84fd-409a-923d-3b424f38cb8b/disable/
+2026-11-09 04:40:37,881 WARNING esims.security security_event type=UNAUTHORIZED_ACCESS user=staff1 ip=127.0.0.1 method=GET path=/suppliers/ details=Access denied (role: STAFF)
+Forbidden (Permission denied): /suppliers/
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/claude/latest/suppliers/views.py", line 20, in wrapper
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+2026-11-09 04:40:37,898 WARNING esims.security security_event type=UNAUTHORIZED_ACCESS user=staff1 ip=127.0.0.1 method=GET path=/suppliers/81dae9ec-2100-48b6-9b06-adb55f80f063/ details=Access denied (role: STAFF)
+Forbidden (Permission denied): /suppliers/81dae9ec-2100-48b6-9b06-adb55f80f063/
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/claude/latest/suppliers/views.py", line 20, in wrapper
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+2026-11-09 04:40:37,914 WARNING esims.security security_event type=UNAUTHORIZED_ACCESS user=staff1 ip=127.0.0.1 method=GET path=/reports/sales/ details=Access denied (role: STAFF)
+Forbidden (Permission denied): /reports/sales/
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/claude/latest/reports/views.py", line 23, in wrapper
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+2026-11-09 04:40:37,930 WARNING esims.security security_event type=UNAUTHORIZED_ACCESS user=staff1 ip=127.0.0.1 method=GET path=/reports/top-selling/ details=Access denied (role: STAFF)
+Forbidden (Permission denied): /reports/top-selling/
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/claude/latest/reports/views.py", line 23, in wrapper
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+Service Unavailable: /health/
+Service Unavailable: /health/
+Service Unavailable: /health/
+Service Unavailable: /health/
+Service Unavailable: /health/
+Service Unavailable: /health/
+Service Unavailable: /health/
+Service Unavailable: /health/
+Service Unavailable: /health/
+Service Unavailable: /health/
+Service Unavailable: /health/
+Service Unavailable: /health/
