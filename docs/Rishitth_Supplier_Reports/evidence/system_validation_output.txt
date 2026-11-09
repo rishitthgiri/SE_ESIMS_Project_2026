@@ -1,0 +1,30 @@
+SV-01   ST-SEC-05     PASS  Open 6 protected pages (suppliers, products, transactions, 2 reports, low stock) while logged out
+SV-02   ST-AVAIL-01   PASS  Open /health/ while logged out
+SV-03   UT-AUTH-01    PASS  Log in as Administrator (admin)
+SV-04   UT-SUP-01     PASS  Add supplier "Zenith Distributors d5a71b"
+SV-05   UT-SUP-01     PASS  Edit the supplier contact
+SV-06   UT-SUP-01     PASS  Add a second supplier with the same name in capitals
+SV-07   ST-SEC-03     PASS  Add a supplier with a blank name
+SV-08   UT-CAT-01     PASS  Set-up: create a category and two products (thresholds 5 and 2)
+SV-09   IT-SUP-02     PASS  Stock-in 10 x Alpha from Zenith
+SV-10   IT-SUP-02     PASS  Stock-in with NO supplier chosen
+SV-11   IT-SUP-02     PASS  Open the supplier page for Zenith
+SV-12   ST-ALERT-01   PASS  Sell 5 so stock (5) EQUALS the threshold (5)
+SV-13   ST-ALERT-01   PASS  Sell 1 more so stock (4) is BELOW the threshold (5)
+SV-14   UT-STOCK-02   PASS  Try to sell 99 when only 4 are in stock
+SV-15   ST-ALERT-01   PASS  Restock 20 so stock (24) is above the threshold
+SV-16   IT-SUP-02     PASS  Disable supplier Orbit, then open the stock-in form
+SV-17   UT-SUP-01     PASS  Open the disable URL with GET (not POST)
+SV-18   ST-REPORT-01  PASS  Open the stock/sales report (default last 30 days)
+SV-19   ST-REPORT-01  PASS  Export the sales CSV for today and add up our two products
+SV-20   ST-REPORT-01  PASS  Export the stock CSV and check stock value = quantity x price
+SV-21   ST-REPORT-01  PASS  Ask for a range where the start date is after the end date
+SV-22   ST-REPORT-01  PASS  Ask for a month with no sales (January 2020)
+SV-23   ST-REPORT-02  PASS  Open top-selling products
+SV-24   UT-AUTH-01    PASS  Log in as Staff (staff1)
+SV-25   ST-SEC-02     PASS  As Staff open suppliers, supplier page, sales report, top sellers
+SV-26   ST-ALERT-01   PASS  As Staff open the low-stock list
+SV-27   IT-STOCK-02   PASS  As Staff record a stock-out; check Staff only see their own transactions
+SV-28   ST-AVAIL-01   PASS  Poll /health/ once a second for 120 seconds
+
+28/28 checks passed

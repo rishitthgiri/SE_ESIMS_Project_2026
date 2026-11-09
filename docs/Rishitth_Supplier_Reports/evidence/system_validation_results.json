@@ -1,0 +1,287 @@
+{
+  "run": "d5a71b",
+  "base": "http://127.0.0.1:8765",
+  "started": "2026-11-09T04:42:38",
+  "results": [
+    {
+      "id": "SV-01",
+      "stp": "ST-SEC-05",
+      "requirement": "SEC-005",
+      "action": "Open 6 protected pages (suppliers, products, transactions, 2 reports, low stock) while logged out",
+      "expected": "Every page redirects (302) to the login page",
+      "actual": "All 6 redirected to /login/",
+      "status": "PASS",
+      "time": "04:40:36"
+    },
+    {
+      "id": "SV-02",
+      "stp": "ST-AVAIL-01",
+      "requirement": "NFR-002",
+      "action": "Open /health/ while logged out",
+      "expected": "HTTP 200 and {\"status\": \"ok\"}, no data",
+      "actual": "HTTP 200 {\"status\": \"ok\"}",
+      "status": "PASS",
+      "time": "04:40:36"
+    },
+    {
+      "id": "SV-03",
+      "stp": "UT-AUTH-01",
+      "requirement": "FR-001",
+      "action": "Log in as Administrator (admin)",
+      "expected": "Redirect to the dashboard (302 to /)",
+      "actual": "HTTP 302 -> /",
+      "status": "PASS",
+      "time": "04:40:36"
+    },
+    {
+      "id": "SV-04",
+      "stp": "UT-SUP-01",
+      "requirement": "FR-015",
+      "action": "Add supplier \"Zenith Distributors d5a71b\"",
+      "expected": "Redirect to list; supplier shown as Active",
+      "actual": "HTTP 302; listed=True",
+      "status": "PASS",
+      "time": "04:40:36"
+    },
+    {
+      "id": "SV-05",
+      "stp": "UT-SUP-01",
+      "requirement": "FR-015",
+      "action": "Edit the supplier contact",
+      "expected": "Redirect to list; new contact shown",
+      "actual": "HTTP 302; new contact shown=True",
+      "status": "PASS",
+      "time": "04:40:36"
+    },
+    {
+      "id": "SV-06",
+      "stp": "UT-SUP-01",
+      "requirement": "FR-015",
+      "action": "Add a second supplier with the same name in capitals",
+      "expected": "Rejected: \"already exists\", page stays on the form (200)",
+      "actual": "HTTP 200; message shown=True",
+      "status": "PASS",
+      "time": "04:40:36"
+    },
+    {
+      "id": "SV-07",
+      "stp": "ST-SEC-03",
+      "requirement": "SEC-003",
+      "action": "Add a supplier with a blank name",
+      "expected": "Rejected (200), nothing saved",
+      "actual": "HTTP 200",
+      "status": "PASS",
+      "time": "04:40:36"
+    },
+    {
+      "id": "SV-08",
+      "stp": "UT-CAT-01",
+      "requirement": "FR-005",
+      "action": "Set-up: create a category and two products (thresholds 5 and 2)",
+      "expected": "Both products appear in the catalog",
+      "actual": "found=True",
+      "status": "PASS",
+      "time": "04:40:37"
+    },
+    {
+      "id": "SV-09",
+      "stp": "IT-SUP-02",
+      "requirement": "FR-016",
+      "action": "Stock-in 10 x Alpha from Zenith",
+      "expected": "Redirect to transactions; list shows the supplier name",
+      "actual": "HTTP 302; supplier on list=True",
+      "status": "PASS",
+      "time": "04:40:37"
+    },
+    {
+      "id": "SV-10",
+      "stp": "IT-SUP-02",
+      "requirement": "FR-016",
+      "action": "Stock-in with NO supplier chosen",
+      "expected": "Rejected (200), no transaction saved",
+      "actual": "HTTP 200",
+      "status": "PASS",
+      "time": "04:40:37"
+    },
+    {
+      "id": "SV-11",
+      "stp": "IT-SUP-02",
+      "requirement": "FR-016",
+      "action": "Open the supplier page for Zenith",
+      "expected": "Shows the Alpha stock-in of 10",
+      "actual": "HTTP 200; Alpha shown=True",
+      "status": "PASS",
+      "time": "04:40:37"
+    },
+    {
+      "id": "SV-12",
+      "stp": "ST-ALERT-01",
+      "requirement": "FR-017",
+      "action": "Sell 5 so stock (5) EQUALS the threshold (5)",
+      "expected": "Alpha is NOT in the low-stock list",
+      "actual": "Alpha listed in table=False",
+      "status": "PASS",
+      "time": "04:40:37"
+    },
+    {
+      "id": "SV-13",
+      "stp": "ST-ALERT-01",
+      "requirement": "FR-017",
+      "action": "Sell 1 more so stock (4) is BELOW the threshold (5)",
+      "expected": "Alpha is in the low-stock list and on the dashboard",
+      "actual": "low-stock table=True; dashboard table=True",
+      "status": "PASS",
+      "time": "04:40:37"
+    },
+    {
+      "id": "SV-14",
+      "stp": "UT-STOCK-02",
+      "requirement": "FR-012",
+      "action": "Try to sell 99 when only 4 are in stock",
+      "expected": "Rejected (200), stock unchanged",
+      "actual": "HTTP 200",
+      "status": "PASS",
+      "time": "04:40:37"
+    },
+    {
+      "id": "SV-15",
+      "stp": "ST-ALERT-01",
+      "requirement": "FR-017",
+      "action": "Restock 20 so stock (24) is above the threshold",
+      "expected": "Alpha disappears from the low-stock list",
+      "actual": "Alpha listed in table=False",
+      "status": "PASS",
+      "time": "04:40:37"
+    },
+    {
+      "id": "SV-16",
+      "stp": "IT-SUP-02",
+      "requirement": "FR-015/016",
+      "action": "Disable supplier Orbit, then open the stock-in form",
+      "expected": "Orbit is no longer offered; supplier still in the list as Disabled",
+      "actual": "disable HTTP 302; offered=False; listed=True",
+      "status": "PASS",
+      "time": "04:40:37"
+    },
+    {
+      "id": "SV-17",
+      "stp": "UT-SUP-01",
+      "requirement": "FR-015",
+      "action": "Open the disable URL with GET (not POST)",
+      "expected": "HTTP 405, nothing changes",
+      "actual": "HTTP 405",
+      "status": "PASS",
+      "time": "04:40:37"
+    },
+    {
+      "id": "SV-18",
+      "stp": "ST-REPORT-01",
+      "requirement": "FR-018",
+      "action": "Open the stock/sales report (default last 30 days)",
+      "expected": "Sales table and totals shown; both products listed",
+      "actual": "HTTP 200; Alpha=True; Beta=True",
+      "status": "PASS",
+      "time": "04:40:37"
+    },
+    {
+      "id": "SV-19",
+      "stp": "ST-REPORT-01",
+      "requirement": "FR-018",
+      "action": "Export the sales CSV for today and add up our two products",
+      "expected": "Header as specified; Alpha 6 units = 1500.00; Beta 35 units = 3500.00",
+      "actual": "HTTP 200; text/csv; Alpha 6 units = 1500.00; Beta 35 units = 3500.00",
+      "status": "PASS",
+      "time": "04:40:37"
+    },
+    {
+      "id": "SV-20",
+      "stp": "ST-REPORT-01",
+      "requirement": "FR-018",
+      "action": "Export the stock CSV and check stock value = quantity x price",
+      "expected": "Alpha 24 x 250.00 = 6000.00; Beta 15 x 100.00 = 1500.00",
+      "actual": "Alpha 24 -> 6000.00; Beta 15 -> 1500.00",
+      "status": "PASS",
+      "time": "04:40:37"
+    },
+    {
+      "id": "SV-21",
+      "stp": "ST-REPORT-01",
+      "requirement": "FR-018",
+      "action": "Ask for a range where the start date is after the end date",
+      "expected": "Error message, no report (200)",
+      "actual": "HTTP 200; message=True",
+      "status": "PASS",
+      "time": "04:40:37"
+    },
+    {
+      "id": "SV-22",
+      "stp": "ST-REPORT-01",
+      "requirement": "FR-018",
+      "action": "Ask for a month with no sales (January 2020)",
+      "expected": "\"No sales in this date range.\" and 0 units",
+      "actual": "HTTP 200; empty message=True",
+      "status": "PASS",
+      "time": "04:40:37"
+    },
+    {
+      "id": "SV-23",
+      "stp": "ST-REPORT-02",
+      "requirement": "FR-019",
+      "action": "Open top-selling products",
+      "expected": "Beta (35 units) is ranked above Alpha (6 units)",
+      "actual": "HTTP 200; Beta position=2881; Alpha position=3081",
+      "status": "PASS",
+      "time": "04:40:37"
+    },
+    {
+      "id": "SV-24",
+      "stp": "UT-AUTH-01",
+      "requirement": "FR-001",
+      "action": "Log in as Staff (staff1)",
+      "expected": "Redirect to the dashboard",
+      "actual": "HTTP 302 -> /",
+      "status": "PASS",
+      "time": "04:40:37"
+    },
+    {
+      "id": "SV-25",
+      "stp": "ST-SEC-02",
+      "requirement": "SEC-002",
+      "action": "As Staff open suppliers, supplier page, sales report, top sellers",
+      "expected": "All four show 403 Forbidden",
+      "actual": "/suppliers/=403, /suppliers/81dae9ec-2100-48b6-9b06-adb55f80f063/=403, /reports/sales/=403, /reports/top-selling/=403",
+      "status": "PASS",
+      "time": "04:40:37"
+    },
+    {
+      "id": "SV-26",
+      "stp": "ST-ALERT-01",
+      "requirement": "FR-017",
+      "action": "As Staff open the low-stock list",
+      "expected": "HTTP 200 (visible to Staff and Administrator)",
+      "actual": "HTTP 200",
+      "status": "PASS",
+      "time": "04:40:37"
+    },
+    {
+      "id": "SV-27",
+      "stp": "IT-STOCK-02",
+      "requirement": "FR-011",
+      "action": "As Staff record a stock-out; check Staff only see their own transactions",
+      "expected": "Sale accepted; list shows own sale but not the administrator's Zenith stock-in",
+      "actual": "HTTP 302; Zenith in staff list=False",
+      "status": "PASS",
+      "time": "04:40:37"
+    },
+    {
+      "id": "SV-28",
+      "stp": "ST-AVAIL-01",
+      "requirement": "NFR-002",
+      "action": "Poll /health/ once a second for 120 seconds",
+      "expected": "100% of checks HTTP 200 (target 99% of business hours)",
+      "actual": "119/119 checks = 100.00% available; latency median 10.7 ms, 95th percentile 15.0 ms",
+      "status": "PASS",
+      "time": "04:42:38"
+    }
+  ]
+}
