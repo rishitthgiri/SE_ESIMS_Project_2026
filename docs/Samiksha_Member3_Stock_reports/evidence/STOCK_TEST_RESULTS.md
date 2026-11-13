@@ -8,14 +8,14 @@ Copy these rows into the "Actual Result" and "Status" columns of the Test Case D
 
 ```
 set DB_ENGINE=sqlite
-python manage.py test transactions -v 2 > docs\evidence\stock_tests.txt 2>&1
+python manage.py test transactions -v 2 > evidence\stock_tests.txt 2>&1
 coverage erase
 coverage run --branch --source=transactions manage.py test transactions
-coverage report -m --omit="*/tests.py,*/test_*.py,*/testutils.py,*/migrations/*" > docs\evidence\stock_coverage.txt
-coverage html --omit="*/tests.py,*/test_*.py,*/testutils.py,*/migrations/*" -d docs\evidence\stock_coverage_html
+coverage report -m --omit="*/tests.py,*/test_*.py,*/testutils.py,*/migrations/*" > evidence\stock_coverage.txt
+coverage html --omit="*/tests.py,*/test_*.py,*/testutils.py,*/migrations/*" -d evidence\stock_coverage_html
 ```
 
-A row is Pass only if its tests passed in `docs/evidence/stock_tests.txt`.
+A row is Pass only if its tests passed in `evidence/stock_tests.txt`.
 
 **Date run:** 06 / 11 / 2026
 **Automated tests in `transactions`:** 76 run, 76 passed (confirm against `stock_tests.txt`)
@@ -29,9 +29,9 @@ A row is Pass only if its tests passed in `docs/evidence/stock_tests.txt`.
 | IT-STOCK-02 | FR-011 | `tests.StockOutServiceTests.test_stock_out_decreases_stock_and_saves_transaction` | Stock 5 - sale of 3 = 2; one OUT transaction saved, no supplier | Pass |
 | UT-STOCK-02 | FR-012 | `tests.StockOutServiceTests.test_reject_over_sale_leaves_stock_unchanged`, `test_selling_exactly_all_stock_is_allowed`, `test_stock_logic.PureCalculationTests` | Stock 5, sale of 6 rejected with a clear message; stock stays 5; no transaction saved. Selling exactly 5 is allowed | Pass |
 | IT-STOCK-03 | FR-013 | `tests.TransactionIdAndImmutabilityTests.test_every_transaction_gets_a_unique_id`, `test_duplicate_transaction_id_is_blocked_by_database` | Every transaction gets its own UUID; the database refuses a duplicate ID | Pass |
-| ST-STOCK-04 | FR-014 | `test_audit.AuditRecordTests`, `test_audit.AuditAccessTests`, `test_audit.AuditFilterTests`, `tests.TransactionIdAndImmutabilityTests.test_transactions_cannot_be_edited_or_deleted` | User, timestamp, quantity and type are stored on every record; records cannot be edited or deleted through the model; the Administrator audit page (`/transactions/audit/`, added in Sprint, deviation 16) shows them and can filter. Screenshot: `docs/evidence/audit_trail.png` | Pass |
+| ST-STOCK-04 | FR-014 | `test_audit.AuditRecordTests`, `test_audit.AuditAccessTests`, `test_audit.AuditFilterTests`, `tests.TransactionIdAndImmutabilityTests.test_transactions_cannot_be_edited_or_deleted` | User, timestamp, quantity and type are stored on every record; records cannot be edited or deleted through the model; the Administrator audit page (`/transactions/audit/`, added in Sprint, deviation 16) shows them and can filter. Screenshot: `evidence/audit_trail.png` | Pass |
 | ST-REL-01 | NFR-004 | `test_double_submit.DoubleSubmitServiceTests`, `test_double_submit.DoubleSubmitViewTests` | Submitting the same form twice (one-time `request_token`, deviation 17) creates exactly one transaction and changes stock once; the user is told it was already recorded; a rejected sale does not use the token up | Pass |
-| ST-USE-01 | NFR-003 | `test_usability.FewScreensTests` and `docs/USABILITY_WALKTHROUGH.md` | Counted from the dashboard (deviation 19): stock-in and stock-out each take 3 screens (limit 4); an error keeps the user on the same screen. Manual run recorded in the walkthrough | Pass |
+| ST-USE-01 | NFR-003 | `test_usability.FewScreensTests` and `USABILITY_WALKTHROUGH.md` | Counted from the dashboard (deviation 19): stock-in and stock-out each take 3 screens (limit 4); an error keeps the user on the same screen. Manual run recorded in the walkthrough | Pass |
 | ST-SEC-03 | SEC-003 | `tests.StockViewTests.test_invalid_input_is_rejected_by_the_form`, `tests.StockInServiceTests.test_stock_in_rejects_bad_quantities`, `tests.StockOutServiceTests.test_stock_out_rejects_bad_quantities_and_disabled_product` | Negative, zero, text, empty, too-large and malformed quantities are rejected; stock and history unchanged | Pass |
 | UT-ALERT-01 (called ST-ALERT-01 in STP section 13) | FR-017 | `test_stock_logic.ThresholdTests` | Low stock means strictly below the threshold (equal is not low); a sale crossing it raises the alert, a stock-in clears it; disabled products are excluded | Pass |
 | UT-STOCK-01 | NFR-006 | `test_stock_logic.PureCalculationTests`, `test_stock_logic.LedgerConsistencyTests`, `test_stock_logic.SeparationFromUITests` | Stock arithmetic runs without the UI or a database (deviation 20); stock always equals start + stock-ins - stock-outs over 60 random operations; views contain no stock arithmetic | Pass |
@@ -56,14 +56,14 @@ The Requirements Traceability Matrix (STP 13.1) and the test-case table (STP 13)
 2. Tests run on SQLite (deviation 6). The row lock (`select_for_update`) only really locks on PostgreSQL, so concurrent over-sale is not proven by these tests.
 3. Sale amounts use the product's current price (not a snapshot taken at sale time).
 
-## Evidence files in `docs/evidence/`
+## Evidence files in `evidence/`
 
 | File | What it shows |
 | --- | --- |
 | `stock_tests.txt` | Full test run output |
 | `stock_coverage.txt` | Statement and branch coverage of `transactions` |
 | `stock_coverage_html/` | Browsable coverage report |
-| `audit_trail.png` | `/transactions/audit/` as admin |
-| `over_sale_rejected.png` | The red "Only N unit(s)" message |
-| `double_submit.png` | Double-submit test output |
-| `usability_*.png` | Usability screenshots |
+| `ESIMS_Samiksha_Evidence.pdf` (page: audit_trail) | `/transactions/audit/` as admin |
+| `ESIMS_Samiksha_Evidence.pdf` (page: over_sale_rejected) | The red "Only N unit(s)" message |
+| `ESIMS_Samiksha_Evidence.pdf` (page: double_submit) | Double-submit test output |
+| `ESIMS_Samiksha_Evidence.pdf` (usability pages) | Usability screenshots |
