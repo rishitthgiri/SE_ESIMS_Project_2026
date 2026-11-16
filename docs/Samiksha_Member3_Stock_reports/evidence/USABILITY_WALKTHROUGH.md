@@ -25,6 +25,6 @@ If the sale is **rejected** (more than the stock), the user stays on screen 2: t
 
 Both flows take **3 screens, which is within the limit of 4.** The automated check is `transactions/test_usability.py` (it walks dashboard, form, result and asserts the count).
 
-Screenshots to save in `docs/evidence/ESIMS_Samiksha_Evidence.pdf`.
+Screenshots are in `evidence/ESIMS_Samiksha_Evidence.pdf`.
 
 **Conclusion:** All runs took 3 screens, under the limit of 4.
